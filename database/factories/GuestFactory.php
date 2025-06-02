@@ -21,7 +21,7 @@ class GuestFactory extends Factory
     {
         return [
             'first_name' => $this->faker->firstName,
-            'email' => $this->faker->email,
+            'email' => $this->faker->unique()->email,
         ];
     }
 }

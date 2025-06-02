@@ -20,7 +20,7 @@ class GuestTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'name' => $this->faker->city,
             'description' => $this->faker->sentence,
         ];
     }
