@@ -6,6 +6,7 @@ use App\Domains\Guests\Models\GuestType;
 use App\Domains\Guests\Models\Guest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\QueryException;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use PHPUnit\Framework\Attributes\Test;
@@ -125,5 +126,23 @@ class GuestTypeModelTest extends TestCase
         $this->assertInstanceOf(Collection::class, $guestType->guests);
         $this->assertEquals($random, $guestType->guests->count());
         $this->assertInstanceOf(Guest::class, $guestType->guests->first());
+    }
+
+    #[Test]
+    public function name_must_be_unique(): void
+    {
+        $name = $this->faker->word;
+
+        $type = GuestType::factory()->create([
+            'name' => $name,
+        ]);
+
+        $this->assertEquals($name, $type->name);
+
+        $this->expectException(UniqueConstraintViolationException::class);
+
+        $guest2 = GuestType::factory()->create([
+            'name' => $name,
+        ]);
     }
 }

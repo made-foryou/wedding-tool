@@ -3,6 +3,7 @@
 namespace App\Domains\Guests\Models;
 
 use Database\Factories\GuestFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property-read int $id
  * @property-read int $guest_type_id
+ * @property-read string $name
  * @property string $first_name
  * @property string|null $last_name
  * @property string $email (Unique)
@@ -19,17 +21,25 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
- *
  * @property-read GuestType $guestType
  */
 class Guest extends Model
 {
-    use SoftDeletes;
-
-    /** @use HasFactory<\Database\Factories\GuestFactory> */
+    /** @use HasFactory<GuestFactory> */
     use HasFactory;
 
+    use SoftDeletes;
+
     protected $fillable = ['first_name', 'last_name', 'email', 'phone_number'];
+
+    public function name(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value, array $attributes): string {
+                return "{$attributes['first_name']} {$attributes['last_name']}";
+            },
+        );
+    }
 
     /**
      * @return BelongsTo<GuestType>

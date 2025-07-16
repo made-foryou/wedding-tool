@@ -7,6 +7,8 @@ use App\Filament\Resources\GuestTypeResource\RelationManagers;
 use App\Domains\Guests\Models\GuestType;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,24 +21,43 @@ class GuestTypeResource extends Resource
 
     protected static ?string $navigationIcon = 'carbon-data-categorical';
 
+    protected static ?string $navigationGroup = 'Guests';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->required(),
-
-                Forms\Components\Textarea::make('description')->nullable(),
+                Forms\Components\Section::make('Data')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->required()->maxLength(255),
+                        Forms\Components\Textarea::make('description')->columnSpanFull(),
+                    ])
+                    ->columns(['default' => 1, 'md' => 2])
+                    ->columnSpan(1),
             ])
-            ->columns(1);
+            ->columns([
+                'default' => 1,
+                'lg' => 2,
+            ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-
-                Tables\Columns\TextColumn::make('updated_at')->since(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->since()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->since()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->since()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([Tables\Filters\TrashedFilter::make()])
             ->actions([Tables\Actions\ViewAction::make(), Tables\Actions\EditAction::make()])
@@ -49,11 +70,27 @@ class GuestTypeResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $list): Infolist
+    {
+        return $list
+            ->schema([
+                Infolists\Components\Fieldset::make('Guest type')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('name'),
+                        Infolists\Components\TextEntry::make('description'),
+                    ])
+                    ->columns(['default' => 1, 'md' => 2])
+                    ->columnSpan(1),
+            ])
+            ->columns([
+                'default' => 1,
+                'lg' => 2,
+            ]);
+    }
+
     public static function getRelations(): array
     {
-        return [
-                //
-            ];
+        return [RelationManagers\GuestsRelationManager::class];
     }
 
     public static function getPages(): array
