@@ -13,6 +13,9 @@ Route::prefix('{guestType:name}')->group(function () {
     Route::get('/', Invite\InviteController::class)
         ->name('invite');
 
+    Route::get('/bio', Invite\BioPageController::class)
+        ->name('bio');
+
     Route::get('/present', Invite\PresentPageController::class)
         ->name('present');
 

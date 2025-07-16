@@ -33,7 +33,11 @@ const LikeIcon = ({ ...props }): React.JSX.Element => (
     </svg>
 );
 
-export default function TinderTemplate({ onPresent, onAbsent }: InviteTemplate): React.JSX.Element {
+export default function TinderTemplate({
+    onPresent,
+    onAbsent,
+    onBio,
+}: InviteTemplate): React.JSX.Element {
     const handleConfetti = (colors: string[]) => {
         confetti({
             scalar: 2,
@@ -69,17 +73,18 @@ export default function TinderTemplate({ onPresent, onAbsent }: InviteTemplate):
         }, 1000);
     };
 
-    const reset = () => {};
-
     return (
         <>
             <Image
                 src={'/assets/logo.png'}
                 alt="Menno & Muriël"
-                className="absolute -top-12 mx-auto z-20 aspect-3/2 object-cover scale-75"
+                className="aspect-3/2 absolute -top-12 z-20 mx-auto scale-75 object-cover"
                 removeWrapper={true}
             />
-            <div className="box-border h-[80vh] w-[100vw] overflow-hidden px-[6%] pt-[5vh]">
+            <div
+                className="box-border h-[80vh] w-[100vw] overflow-hidden px-[6%] pt-[5vh]"
+                onClick={onBio}
+            >
                 <Swiper
                     style={{ height: '100%' }}
                     effect={'cards'}
