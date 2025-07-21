@@ -20,6 +20,7 @@ class GuestFactory extends Factory
     public function definition(): array
     {
         return [
+            'guest_type_id' => 1,
             'first_name' => $this->faker->firstName,
             'email' => $this->faker->unique()->email,
         ];

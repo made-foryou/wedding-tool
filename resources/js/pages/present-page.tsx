@@ -1,14 +1,21 @@
+import EventsAvailability from '@/components/events-availability';
 import Invite from '@/pages/invite';
 import { Guest, GuestType, Resource } from '@/types/resources';
 import {
+    addToast,
     Autocomplete,
     AutocompleteItem,
     Button,
+    Card,
+    CardBody,
+    CardFooter,
+    CardHeader,
     Drawer,
     DrawerBody,
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
+    Image,
     Modal,
     ModalBody,
     ModalContent,
@@ -26,30 +33,38 @@ type Option = {
     key: string;
 };
 
+function alreadySelected(found: Guest, selected: Array<Guest>): boolean {
+    return selected.filter((item: Guest): boolean => item.email === found.email).length !== 0;
+}
+
 export default function PresentPage({ guestType }: PresentPageProps): React.JSX.Element {
-    const { isOpen, onOpenChange, onClose } = useDisclosure({ isOpen: true });
+    const { isOpen, onOpenChange, onClose } = useDisclosure({
+        defaultOpen: true,
+        onClose: () => {},
+    });
     const drawer = useDisclosure();
 
-    const [current, setCurrent] = useState<Guest | null>(null);
-
-    const [others, setOthers] = useState<Array<Guest>>([]);
+    const [guests, setGuests] = useState<Array<Guest>>([]);
 
     const [selected, setSelected] = useState<Guest | null>(null);
 
     const selectionChangeHandler = (key: Key | null) => {
-        const found: Guest | undefined = guestType.data.guests.data.find(
+        const found: Guest | undefined = guestType.data.guests.find(
             (guest: Guest): boolean => guest.email === key,
         );
 
         if (found) {
-            setCurrent(found);
+            const clone = guests;
+            clone.push(found);
+
+            setGuests(clone);
 
             onClose();
         }
     };
 
     const onSelectSelectedHandler = (key: Key | null) => {
-        const found: Guest | undefined = guestType.data.guests.data.find(
+        const found: Guest | undefined = guestType.data.guests.find(
             (guest: Guest): boolean => guest.email === key,
         );
 
@@ -60,34 +75,70 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
 
     const onSubmitHandler = () => {
         if (selected !== null) {
-            const clone = others;
+            const clone = guests;
             clone.push(selected);
 
-            setOthers(clone);
+            setGuests(clone);
         }
     };
 
-    const guests = (): Option[] => {
-        return guestType.data.guests.data.map(
+    const guestOptions = (): Option[] => {
+        return guestType.data.guests.map(
             (item: Guest): Option => ({ label: item.name, key: item.email }),
         );
     };
 
     const otherGuests = (): Option[] => {
-        return guestType.data.guests.data
-            .filter((item: Guest) => (current ? item.email !== current.email : false))
+        return guestType.data.guests
+            .filter((item: Guest) => !alreadySelected(item, guests))
             .map((item: Guest): Option => ({ label: item.name, key: item.email }));
     };
 
-    const otherElements = others.map(
-        (item: Guest): React.JSX.Element => (
-            <div>
-                <span>{item.name}</span>
-            </div>
-        ),
-    );
+    const onSubmitFormHandler = (e: React.FormEvent<HTMLFormElement>): boolean => {
+        e.preventDefault();
 
-    if (current === null) {
+        const formData: FormData = new FormData(e.currentTarget);
+
+        fetch('/api/save-presence', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((response) => {
+                if (response.already_known) {
+                    addToast({
+                        title: 'Oeps, er gaat wat fout',
+                        description:
+                            response.already_known.length > 1
+                                ? 'De aanwezigheid van ' +
+                                  response.already_known.join(', ') +
+                                  ' zijn al bekend. Voor hun kun je geen aanwezigheid meer invullen.'
+                                : 'De aanwezigheid van ' +
+                                  response.already_known.join(', ') +
+                                  ' is al bekend. Voor hem/haar kun je geen aanwezigheid meer invullen.',
+                        color: 'danger',
+                    });
+                } else {
+                    addToast({
+                        title: 'Bedankt!',
+                        description:
+                            guests.length > 1
+                                ? 'Bedankt voor de aanmeldingen. We hebben ze goed ontvangen. Willen jullie nu een paar vragen beantwoorden?'
+                                : 'Bedankt voor je aanmelding. We hebben hem goed ontvangen. Wil je nu even een paar vragen voor ons alvast beantwoorden?',
+                        color: 'success',
+                    });
+                }
+            });
+
+        return false;
+    };
+
+    if (guests.length === 0) {
         return (
             <>
                 <Invite model={guestType} />
@@ -107,7 +158,7 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
                                         mensen aan te melden en je gegevens achter te laten.
                                     </p>
                                     <Autocomplete
-                                        defaultItems={guests()}
+                                        defaultItems={guestOptions()}
                                         label="Wie ben jij?"
                                         placeholder="Zoek & selecteer jezelf"
                                         onSelectionChange={selectionChangeHandler}
@@ -128,18 +179,62 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
     } else {
         return (
             <>
-                <div className="px-8 py-10">
-                    <div className="mb-6">
-                        <h2 className="mb-4 text-2xl">Hey {current?.name ?? 'menno'},</h2>
-                        <p>Wat ontzettend leuk dat je erbij bent wanneer wij gaan trouwen!</p>
-                    </div>
-                    <div>
-                        <span>Wil je gelijk nog iemand aanmelden?</span>
-                        <Button color="primary" variant="solid" onPress={drawer.onOpen}>
-                            Meld nog iemand aan
-                        </Button>
-                    </div>
-                    <div>{otherElements}</div>
+                <div className="mb-4">
+                    <Image
+                        src={'/assets/logo.png'}
+                        alt="Menno & Muriël"
+                        width="45%"
+                        className="mx-auto mt-8"
+                        removeWrapper={true}
+                    />
+                </div>
+                <div className="px-6">
+                    <form onSubmit={onSubmitFormHandler}>
+                        <Card>
+                            <CardHeader>
+                                <h3 className="font-written text-xl font-bold">
+                                    Hallo {guests[0].name},
+                                </h3>
+                            </CardHeader>
+                            <CardBody>
+                                <p>
+                                    Wat ontzettend leuk dat je er bij bent wanneer wij gaan trouwen!
+                                </p>
+                                <p>
+                                    Geef hier onder je aanwezigheid op voor de verschillende dagen
+                                    en/of meld nog meer mensen aan:
+                                </p>
+                            </CardBody>
+                            <CardFooter></CardFooter>
+                        </Card>
+                        <EventsAvailability
+                            events={guestType.data.events}
+                            guests={guests}
+                        ></EventsAvailability>
+                        <div className="p-4">
+                            <Button color="primary" variant="shadow" type="submit">
+                                Opslaan
+                            </Button>
+                            <Button
+                                className="fixed bottom-4 right-4"
+                                color="secondary"
+                                isIconOnly
+                                size="lg"
+                                radius="full"
+                                variant="shadow"
+                                onPress={drawer.onOpen}
+                            >
+                                <svg
+                                    className="size-8 fill-none stroke-current"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true"
+                                >
+                                    <path d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"></path>
+                                </svg>
+                            </Button>
+                        </div>
+                    </form>
                 </div>
                 <Drawer
                     backdrop="blur"

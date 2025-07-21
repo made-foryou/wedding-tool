@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Guests;
 
+use App\Domains\Guests\Models\Guest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @extends Guest
+ */
 class GuestResource extends JsonResource
 {
     /**
@@ -17,6 +21,7 @@ class GuestResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->uuid,
             'type' => $this->whenLoaded('guestType'),
             'name' => $this->name,
             'first_name' => $this->first_name,

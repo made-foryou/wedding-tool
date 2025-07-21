@@ -2,16 +2,22 @@
 
 namespace App\Domains\Guests\Models;
 
+use App\Domains\Guests\QueryBuilder\GuestQueryBuilder;
+use App\Domains\Presence\Models\Event;
 use Database\Factories\GuestFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
  * @property-read int $id
+ * @property-read string $uuid
  * @property-read int $guest_type_id
  * @property-read string $name
  * @property string $first_name
@@ -22,15 +28,20 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
  * @property-read GuestType $guestType
+ * @property-read Collection<Event> $events
+ *
+ * @method static GuestFactory factory($count = null, $state = [])
+ * @method static GuestQueryBuilder query()
  */
 class Guest extends Model
 {
     /** @use HasFactory<GuestFactory> */
     use HasFactory;
 
+    use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['first_name', 'last_name', 'email', 'phone_number'];
+    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number'];
 
     public function name(): Attribute
     {
@@ -47,6 +58,11 @@ class Guest extends Model
     public function guestType(): BelongsTo
     {
         return $this->belongsTo(GuestType::class);
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_guest');
     }
 
     /**
@@ -67,8 +83,23 @@ class Guest extends Model
         ];
     }
 
+    /**
+     * Get the columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
     public static function newFactory(): GuestFactory
     {
         return GuestFactory::new();
+    }
+
+    public function newEloquentBuilder($query): GuestQueryBuilder
+    {
+        return new GuestQueryBuilder($query);
     }
 }

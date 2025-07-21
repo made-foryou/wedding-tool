@@ -1,5 +1,6 @@
 import { InviteTemplate } from '@/types/invite-types';
 import { Button, Image, Tooltip } from '@heroui/react';
+import { router } from '@inertiajs/react';
 import confetti from 'canvas-confetti';
 import React from 'react';
 import 'swiper/css';
@@ -33,11 +34,7 @@ const LikeIcon = ({ ...props }): React.JSX.Element => (
     </svg>
 );
 
-export default function TinderTemplate({
-    onPresent,
-    onAbsent,
-    onBio,
-}: InviteTemplate): React.JSX.Element {
+export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTemplate): React.JSX.Element {
     const handleConfetti = (colors: string[]) => {
         confetti({
             scalar: 2,
@@ -78,7 +75,7 @@ export default function TinderTemplate({
             <Image
                 src={'/assets/logo.png'}
                 alt="Menno & Muriël"
-                className="aspect-3/2 absolute -top-12 z-20 mx-auto scale-75 object-cover"
+                className="w-full h-auto scale-50 absolute -top-12 mx-auto z-20"
                 removeWrapper={true}
             />
             <div
@@ -147,7 +144,7 @@ export default function TinderTemplate({
                             variant="shadow"
                             onPress={absent}
                         >
-                            <CancelIcon class="size-8" />
+                            <CancelIcon className="size-8" />
                         </Button>
                     </Tooltip>
                     <Tooltip content="Jazeker, Natuurlijk ben ik aanwezig!">
@@ -159,7 +156,7 @@ export default function TinderTemplate({
                             variant="shadow"
                             onPress={superPresent}
                         >
-                            <SuperLikeIcon class="size-6" />
+                            <SuperLikeIcon className="size-6" />
                         </Button>
                     </Tooltip>
                     <Tooltip content="Ja, ik ben aanwezig">
@@ -172,7 +169,7 @@ export default function TinderTemplate({
                             variant="shadow"
                             onPress={present}
                         >
-                            <LikeIcon class="size-8" />
+                            <LikeIcon className="size-8" />
                         </Button>
                     </Tooltip>
                 </div>

@@ -3,6 +3,7 @@ import './../css/app.css';
 import { HeroUIProvider, ToastProvider } from '@heroui/react';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // @ts-expect-error meta value
@@ -18,10 +19,12 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <HeroUIProvider>
-                <ToastProvider />
-                <App {...props} />
-            </HeroUIProvider>,
+            <StrictMode>
+                <HeroUIProvider>
+                    <ToastProvider />
+                    <App {...props} />
+                </HeroUIProvider>
+            </StrictMode>,
         );
     },
     progress: {

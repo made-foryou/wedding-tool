@@ -26,7 +26,7 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
                 backdrop="blur"
                 placement="bottom-center"
                 isOpen={isOpen}
-                scrollBehavior="outside"
+                scrollBehavior="inside"
                 onOpenChange={onOpenChangeHandler}
             >
                 <ModalContent>
@@ -36,7 +36,7 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
                                 <Image
                                     src={'/assets/logo.png'}
                                     alt="Menno & Muriël"
-                                    className="aspect-3/2 scale-40 z-20 mx-auto"
+                                    className="scale-75 w-full h-auto z-20 mx-auto"
                                     removeWrapper={true}
                                 />
                             </ModalHeader>
