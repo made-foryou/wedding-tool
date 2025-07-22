@@ -7,7 +7,7 @@ Mocht je je afgemeld hebben en toch wel aanwezig kunnen zijn? Dan kun je jouw af
 september op de knop hieronder te klikken, hierdoor kom je opnieuw in het aanmeldproces en kun je jezelf op
 aanwezig zetten.
 
-<x-mail::button :url="{{ route('invite', ['guestType' => $guest->guestType]) }}">
+<x-mail::button :url="route('invite', ['guestType' => $guest->guestType])">
 Aanmelding aanpassen
 </x-mail::button>
 
@@ -27,7 +27,7 @@ deze e-mail te beantwoorden of te bellen / appen.
 Liefs,<br>
 Menno & Muriël
 
-*Ceremoniemeesters:*
+**Ceremoniemeesters:**
 Romy van Dillen: 06 51 59 88 60
 Quinten Bakker: 06 15 12 07 93
 </x-mail::message>
