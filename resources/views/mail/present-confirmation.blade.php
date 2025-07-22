@@ -102,7 +102,7 @@ Menno & Muriël
 
 **Cadeautip:** ✉️
 
-**Ceremoniemeesters:**
-Romy van Dillen: 06 51 59 88 60
+**Ceremoniemeesters:**<br>
+Romy van Dillen: 06 51 59 88 60<br>
 Quinten Bakker: 06 15 12 07 93
 </x-mail::message>
