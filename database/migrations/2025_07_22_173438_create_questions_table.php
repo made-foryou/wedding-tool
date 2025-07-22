@@ -47,6 +47,9 @@ return new class extends Migration
             $table->boolean('is_hidden')
                 ->default(false);
 
+            $table->boolean('show_for_absent')
+                ->default(true);
+
             $table->timestamps();
             $table->softDeletes();
         });

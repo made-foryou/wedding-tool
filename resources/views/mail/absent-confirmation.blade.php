@@ -1,22 +1,22 @@
 <x-mail::message>
-    # Gezellig!
+# Wat jammer!
 
-    Hey {{ $guest->first_name }}, wat ontzettend gezellig dat je met ons ons huwelijk wilt komen vieren.
+Hey {{ $guest->first_name }}, wat ontzettend jammer dat je er niet bij kunt zijn bij ons huwelijk.
 
-    <x-mail::button :url="$url">
-        Aanmelding aanpassen
-    </x-mail::button>
+<x-mail::button :url="'google.nl'">
+    Aanmelding aanpassen
+</x-mail::button>
 
-    @if ($guest->guestType->absent_text)
+@if ($guest->guestType->absent_text)
 
-        ## Hieronder volgt een bericht van de ceremoniemeesters
+## Hieronder volgt een bericht van de ceremoniemeesters
 
-        <x-mail::panel>
-            {!! $guest->guestType->absent_text !!}
-        </x-mail::panel>
+<x-mail::panel>
+    {!! $guest->guestType->absent_text !!}
+</x-mail::panel>
 
-    @endif
+@endif
 
-    Een vriendelijke groet,<br>
-    Menno & Muriël en de ceremoniemeesters
+Een vriendelijke groet,<br>
+Menno & Muriël en de ceremoniemeesters
 </x-mail::message>

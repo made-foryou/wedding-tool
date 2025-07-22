@@ -1,6 +1,5 @@
 import { InviteTemplate } from '@/types/invite-types';
 import { Button, Image, Tooltip } from '@heroui/react';
-import { router } from '@inertiajs/react';
 import confetti from 'canvas-confetti';
 import React from 'react';
 import 'swiper/css';
@@ -34,7 +33,11 @@ const LikeIcon = ({ ...props }): React.JSX.Element => (
     </svg>
 );
 
-export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTemplate): React.JSX.Element {
+export default function TinderTemplate({
+    onPresent,
+    onAbsent,
+    onBio,
+}: InviteTemplate): React.JSX.Element {
     const handleConfetti = (colors: string[]) => {
         confetti({
             scalar: 2,
@@ -75,7 +78,7 @@ export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTem
             <Image
                 src={'/assets/logo.png'}
                 alt="Menno & Muriël"
-                className="w-full h-auto scale-50 absolute -top-12 mx-auto z-20"
+                className="absolute -top-12 z-20 mx-auto h-auto w-full scale-50"
                 removeWrapper={true}
             />
             <div
@@ -143,8 +146,9 @@ export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTem
                             radius="full"
                             variant="shadow"
                             onPress={absent}
+                            className="h-20 w-20"
                         >
-                            <CancelIcon className="size-8" />
+                            <CancelIcon className="size-12" />
                         </Button>
                     </Tooltip>
                     <Tooltip content="Jazeker, Natuurlijk ben ik aanwezig!">
@@ -155,8 +159,9 @@ export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTem
                             radius="full"
                             variant="shadow"
                             onPress={superPresent}
+                            className="h-14 w-14"
                         >
-                            <SuperLikeIcon className="size-6" />
+                            <SuperLikeIcon className="size-8" />
                         </Button>
                     </Tooltip>
                     <Tooltip content="Ja, ik ben aanwezig">
@@ -168,8 +173,9 @@ export default function TinderTemplate({ onPresent, onAbsent, onBio }: InviteTem
                             radius="full"
                             variant="shadow"
                             onPress={present}
+                            className="h-20 w-20"
                         >
-                            <LikeIcon className="size-8" />
+                            <LikeIcon className="size-12" />
                         </Button>
                     </Tooltip>
                 </div>

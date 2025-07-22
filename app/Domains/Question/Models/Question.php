@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property array $data
  * @property int index
  * @property bool $is_hidden
+ * @property bool $show_for_absent
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
@@ -46,6 +47,7 @@ class Question extends Model
         'data',
         'index',
         'is_hidden',
+        'show_for_absent',
     ];
 
     protected $attributes = [
@@ -92,6 +94,7 @@ class Question extends Model
             'data' => 'array',
             'index' => 'integer',
             'is_hidden' => 'boolean',
+            'show_for_absent' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

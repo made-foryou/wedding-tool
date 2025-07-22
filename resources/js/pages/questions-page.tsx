@@ -27,7 +27,6 @@ type QuestionsPageProps = {
 
 export default function QuestionsPage({
     questions,
-    events,
     guests,
 }: QuestionsPageProps): React.JSX.Element {
     const props = usePage().props;
@@ -103,6 +102,10 @@ export default function QuestionsPage({
                                         {askForEmail(guest)}
 
                                         {questions.map((question) => {
+                                            if (!guest.present && !question.show_for_absent) {
+                                                return;
+                                            }
+
                                             if (question.type.name === 'Open vraag') {
                                                 return (
                                                     <Input

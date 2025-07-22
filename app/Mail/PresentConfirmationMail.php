@@ -28,7 +28,7 @@ class PresentConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bruiloft aanmeldingsbevestiging',
+            subject: 'Aanmelding bruiloft Menno & Muriël',
         );
     }
 

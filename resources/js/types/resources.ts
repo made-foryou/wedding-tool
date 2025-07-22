@@ -17,6 +17,7 @@ export interface GuestType {
 
 export interface Guest {
     type: GuestType;
+    present: boolean;
 
     id: string;
 
@@ -54,4 +55,5 @@ export interface Question {
     label: string;
     description: string;
     data: any;
+    show_for_absent: boolean;
 }

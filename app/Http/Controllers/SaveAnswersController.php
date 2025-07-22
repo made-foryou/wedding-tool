@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domains\Guests\Models\Guest;
 use App\Domains\Question\Models\Question;
+use App\Mail\AbsentConfirmationMail;
 use App\Mail\PresentConfirmationMail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -51,8 +52,13 @@ class SaveAnswersController extends Controller
                 );
             }
 
-            Mail::to($guest->email)
-                ->send(new PresentConfirmationMail($guest));
+            if ($guest->events->isNotEmpty()) {
+                Mail::to($guest->email)
+                    ->send(new PresentConfirmationMail($guest));
+            } else {
+                Mail::to($guest->email)
+                    ->send(new AbsentConfirmationMail($guest));
+            }
         });
 
         return response()->json([]);

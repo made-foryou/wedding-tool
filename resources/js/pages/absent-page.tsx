@@ -25,7 +25,7 @@ import {
 import { router, usePage } from '@inertiajs/react';
 import React, { Key, useState } from 'react';
 
-type PresentPageProps = {
+type AbsentPageProps = {
     guestType: GuestType;
 };
 
@@ -38,7 +38,7 @@ function alreadySelected(found: Guest, selected: Array<Guest>): boolean {
     return selected.filter((item: Guest): boolean => item.id === found.id).length !== 0;
 }
 
-export default function PresentPage({ guestType }: PresentPageProps): React.JSX.Element {
+export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.Element {
     const { isOpen, onOpenChange, onClose } = useDisclosure({
         defaultOpen: true,
         onClose: () => {},
@@ -221,7 +221,7 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
                         <EventsAvailability
                             events={guestType.events}
                             guests={guests}
-                            selected={true}
+                            selected={false}
                         ></EventsAvailability>
                         <div className="p-4">
                             <Button color="primary" variant="shadow" type="submit">

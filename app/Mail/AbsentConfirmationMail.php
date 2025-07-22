@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Domains\Guests\Models\Guest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -15,8 +16,9 @@ class AbsentConfirmationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public readonly Guest $guest,
+    ) {
         //
     }
 
@@ -26,7 +28,7 @@ class AbsentConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Absent Confirmation Mail',
+            subject: 'Afmelding bruiloft Menno & Muriël',
         );
     }
 
@@ -36,7 +38,7 @@ class AbsentConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            markdown: 'mail.absent-confirmation',
         );
     }
 

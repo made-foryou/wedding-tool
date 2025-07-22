@@ -24,6 +24,7 @@ class QuestionResource extends JsonResource
             'label' => $this->label,
             'description' => $this->description,
             'data' => $this->data,
+            'show_for_absent' => $this->show_for_absent,
         ];
     }
 }

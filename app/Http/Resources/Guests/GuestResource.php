@@ -23,6 +23,7 @@ class GuestResource extends JsonResource
         return [
             'id' => $this->uuid,
             'type' => $this->whenLoaded('guestType'),
+            'present' => $this->events->isNotEmpty(),
             'name' => $this->name,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,

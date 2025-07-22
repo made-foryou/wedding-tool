@@ -60,6 +60,8 @@ class QuestionResource extends Resource
 
                 Toggle::make('is_hidden'),
 
+                Toggle::make('show_for_absent'),
+
             ]);
     }
 

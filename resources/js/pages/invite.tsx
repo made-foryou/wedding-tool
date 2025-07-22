@@ -10,15 +10,15 @@ export default function Invite({ model }: InvitePageProps): React.JSX.Element {
     const Template = inviteTemplates.tinder;
 
     const acceptHandler = () => {
-        router.visit(model.name + '/present');
+        router.visit('/' + model.name + '/present');
     };
 
     const absentHandler = () => {
-        router.visit(model.name + '/absent');
+        router.visit('/' + model.name + '/absent');
     };
 
     const bioHandler = () => {
-        router.visit(model.name + '/bio');
+        router.visit('/' + model.name + '/bio');
     };
 
     return <Template onPresent={acceptHandler} onAbsent={absentHandler} onBio={bioHandler} />;

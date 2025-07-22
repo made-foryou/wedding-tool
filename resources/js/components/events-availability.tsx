@@ -6,11 +6,13 @@ import React from 'react';
 interface EventsAvailabilityProps {
     events: Array<any>;
     guests: Array<Guest>;
+    selected: boolean;
 }
 
 export default function EventsAvailability({
     events,
     guests,
+    selected,
 }: EventsAvailabilityProps): React.JSX.Element {
     return (
         <>
@@ -29,7 +31,7 @@ export default function EventsAvailability({
                                 <GuestCheckboxGroup
                                     event={event}
                                     guests={guests}
-                                    selected={true}
+                                    selected={selected}
                                 ></GuestCheckboxGroup>
                             </CardBody>
                         </Card>
