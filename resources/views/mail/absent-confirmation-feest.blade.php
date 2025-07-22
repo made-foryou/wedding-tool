@@ -3,16 +3,13 @@
 
 Wat jammer dat je er niet bij bent om samen met ons de liefde te vieren op Landgoed Twistvliet in Vrouwenpolder.
 
-Mocht je je afgemeld hebben en toch wel aanwezig kunnen zijn? Dan kun je jouw afwezigheid wijzigen door op de knop
-hieronder te klikken, hierdoor kom je opnieuw in het aanmeldproces en kun je jezelf op aanwezig zetten. *_Dit kan
-tot zondag 21 september 2025._*
+Mocht je je afgemeld hebben en toch wel aanwezig kunnen zijn? Dan kun je jouw afwezigheid wijzigen door op voor 21
+september op de knop hieronder te klikken, hierdoor kom je opnieuw in het aanmeldproces en kun je jezelf op
+aanwezig zetten.
 
 <x-mail::button :url="{{ route('invite', ['guestType' => $guest->guestType]) }}">
 Aanmelding aanpassen
 </x-mail::button>
-
-Als je vragen hebt of je er niet uit komt, neem dan ook zeker contact op met onze ceremoniemeesters. Dat kan door
-deze e-mail te beantwoorden of te bellen / appen.
 
 @if ($guest->guestType->absent_text)
 
@@ -23,6 +20,9 @@ deze e-mail te beantwoorden of te bellen / appen.
 </x-mail::panel>
 
 @endif
+
+Als je vragen hebt of je er niet uit komt, neem dan ook zeker contact op met onze ceremoniemeesters. Dat kan door
+deze e-mail te beantwoorden of te bellen / appen.
 
 Liefs,<br>
 Menno & Muriël

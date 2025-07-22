@@ -38,7 +38,7 @@ class AbsentConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.absent-confirmation',
+            markdown: ($this->guest->guestType->name === 'Weekender' ? 'mail.absent-confirmation' : 'mail.absent-confirmation-feest'),
         );
     }
 

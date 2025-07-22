@@ -38,7 +38,7 @@ class PresentConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.present-confirmation',
+            markdown: ($this->guest->guestType->name === 'Weekender' ? 'mail.present-confirmation' : 'mail.present-confirmation-feest'),
         );
     }
 
