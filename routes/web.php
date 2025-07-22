@@ -1,12 +1,9 @@
 <?php
 
 use App\Http\Controllers\Invite;
+use App\Http\Controllers\Presence\SavePresenceController;
+use App\Http\Controllers\SaveAnswersController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
 
 Route::prefix('{guestType:name}')->group(function () {
 
@@ -21,4 +18,13 @@ Route::prefix('{guestType:name}')->group(function () {
 
     Route::get('/absent', Invite\AbsentPageController::class)
         ->name('absent');
+
+    Route::get('/questions', Invite\QuestionsPageController::class)
+        ->name('questions');
+});
+
+Route::prefix('api')->group(function () {
+    Route::post('save-presence', SavePresenceController::class);
+
+    Route::post('save-answers', SaveAnswersController::class);
 });

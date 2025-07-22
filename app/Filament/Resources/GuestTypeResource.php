@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Guests\Models\GuestType;
 use App\Filament\Resources\GuestTypeResource\Pages;
 use App\Filament\Resources\GuestTypeResource\RelationManagers;
-use App\Domains\Guests\Models\GuestType;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -34,6 +34,10 @@ class GuestTypeResource extends Resource
                     ])
                     ->columns(['default' => 1, 'md' => 2])
                     ->columnSpan(1),
+
+                Forms\Components\RichEditor::make('present_text'),
+
+                Forms\Components\RichEditor::make('absent_text'),
             ])
             ->columns([
                 'default' => 1,

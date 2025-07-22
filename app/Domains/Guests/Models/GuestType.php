@@ -17,6 +17,8 @@ use Illuminate\Support\Carbon;
  * @property-read string $uuid
  * @property string $name
  * @property string|null $description
+ * @property string|null $present_text
+ * @property string|null $absent_text
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon|null $deleted_at
@@ -31,7 +33,7 @@ class GuestType extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name', 'description', 'present_text', 'absent_text'];
 
     /**
      * @return HasMany<Guest>
@@ -39,6 +41,11 @@ class GuestType extends Model
     public function guests(): HasMany
     {
         return $this->hasMany(Guest::class);
+    }
+
+    public function availableGuests(): HasMany
+    {
+        return $this->guests()->whereDoesntHave('events');
     }
 
     public function events(): HasMany

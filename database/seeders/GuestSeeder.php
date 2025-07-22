@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Domains\Guests\Imports\GuestsImport;
 use Illuminate\Database\Seeder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuestSeeder extends Seeder
 {
@@ -12,6 +13,6 @@ class GuestSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Excel::import(new GuestsImport, storage_path('app/private/gasten-export.xlsx'));
     }
 }

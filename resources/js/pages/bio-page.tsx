@@ -1,11 +1,11 @@
-import { GuestType, Resource } from '@/types/resources';
+import { GuestType } from '@/types/resources';
 import { Image, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from '@heroui/react';
 import { router } from '@inertiajs/react';
 import React from 'react';
 import Invite from './invite';
 
 type BioPageProps = {
-    guestType: Resource<GuestType>;
+    guestType: GuestType;
 };
 
 export default function BioPage({ guestType }: BioPageProps): React.JSX.Element {
@@ -15,7 +15,7 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
         if (!state) {
             onClose();
 
-            router.visit('/' + guestType.data.name);
+            router.visit('/' + guestType.name);
         }
     };
 
@@ -36,7 +36,7 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
                                 <Image
                                     src={'/assets/logo.png'}
                                     alt="Menno & Muriël"
-                                    className="scale-75 w-full h-auto z-20 mx-auto"
+                                    className="z-20 mx-auto h-auto w-full scale-75"
                                     removeWrapper={true}
                                 />
                             </ModalHeader>

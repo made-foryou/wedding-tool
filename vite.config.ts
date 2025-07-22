@@ -12,6 +12,9 @@ export default defineConfig({
         }),
         react(),
     ],
+    ssr: {
+        noExternal: ['ziggy-js'], // optional depending on imports
+    },
     esbuild: {
         jsx: 'automatic',
     },

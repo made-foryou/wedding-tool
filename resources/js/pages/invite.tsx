@@ -1,26 +1,24 @@
 import { inviteTemplates } from '@/templates/invites/templates';
-import { GuestType, Resource } from '@/types/resources';
+import { GuestType } from '@/types/resources';
 import { router } from '@inertiajs/react';
 
 type InvitePageProps = {
-    model: Resource<GuestType>;
+    model: GuestType;
 };
 
 export default function Invite({ model }: InvitePageProps): React.JSX.Element {
-    const type: GuestType = model.data;
-
     const Template = inviteTemplates.tinder;
 
     const acceptHandler = () => {
-        router.visit(type.name + '/present');
+        router.visit(model.name + '/present');
     };
 
     const absentHandler = () => {
-        router.visit(type.name + '/absent');
+        router.visit(model.name + '/absent');
     };
 
     const bioHandler = () => {
-        router.visit(type.name + '/bio');
+        router.visit(model.name + '/bio');
     };
 
     return <Template onPresent={acceptHandler} onAbsent={absentHandler} onBio={bioHandler} />;

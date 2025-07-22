@@ -15,7 +15,8 @@ class InviteController extends Controller
 {
     public function __invoke(Request $request, GuestType $guestType): Response
     {
-        $guestType->load('guests');
+        $request->session()->put('guests', []);
+        $request->session()->save();
 
         return Inertia::render('invite', [
             'model' => new GuestTypeResource($guestType),

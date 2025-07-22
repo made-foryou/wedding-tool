@@ -1,6 +1,6 @@
 import EventsAvailability from '@/components/events-availability';
 import Invite from '@/pages/invite';
-import { Guest, GuestType, Resource } from '@/types/resources';
+import { Guest, GuestType } from '@/types/resources';
 import {
     addToast,
     Autocomplete,
@@ -22,10 +22,11 @@ import {
     ModalHeader,
     useDisclosure,
 } from '@heroui/react';
+import { router, usePage } from '@inertiajs/react';
 import React, { Key, useState } from 'react';
 
 type PresentPageProps = {
-    guestType: Resource<GuestType>;
+    guestType: GuestType;
 };
 
 type Option = {
@@ -34,7 +35,7 @@ type Option = {
 };
 
 function alreadySelected(found: Guest, selected: Array<Guest>): boolean {
-    return selected.filter((item: Guest): boolean => item.email === found.email).length !== 0;
+    return selected.filter((item: Guest): boolean => item.id === found.id).length !== 0;
 }
 
 export default function PresentPage({ guestType }: PresentPageProps): React.JSX.Element {
@@ -49,8 +50,8 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
     const [selected, setSelected] = useState<Guest | null>(null);
 
     const selectionChangeHandler = (key: Key | null) => {
-        const found: Guest | undefined = guestType.data.guests.find(
-            (guest: Guest): boolean => guest.email === key,
+        const found: Guest | undefined = guestType.guests.find(
+            (guest: Guest): boolean => guest.id === key,
         );
 
         if (found) {
@@ -64,8 +65,8 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
     };
 
     const onSelectSelectedHandler = (key: Key | null) => {
-        const found: Guest | undefined = guestType.data.guests.find(
-            (guest: Guest): boolean => guest.email === key,
+        const found: Guest | undefined = guestType.guests.find(
+            (guest: Guest): boolean => guest.id === key,
         );
 
         if (found) {
@@ -83,16 +84,16 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
     };
 
     const guestOptions = (): Option[] => {
-        return guestType.data.guests.map(
-            (item: Guest): Option => ({ label: item.name, key: item.email }),
-        );
+        return guestType.guests.map((item: Guest): Option => ({ label: item.name, key: item.id }));
     };
 
     const otherGuests = (): Option[] => {
-        return guestType.data.guests
+        return guestType.guests
             .filter((item: Guest) => !alreadySelected(item, guests))
-            .map((item: Guest): Option => ({ label: item.name, key: item.email }));
+            .map((item: Guest): Option => ({ label: item.name, key: item.id }));
     };
+
+    const props = usePage().props;
 
     const onSubmitFormHandler = (e: React.FormEvent<HTMLFormElement>): boolean => {
         e.preventDefault();
@@ -102,7 +103,9 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
         fetch('/api/save-presence', {
             method: 'POST',
             body: formData,
+            credentials: 'include',
             headers: {
+                'X-CSRF-Token': props.csrf_token,
                 Accept: 'application/json',
             },
         })
@@ -132,6 +135,10 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
                                 : 'Bedankt voor je aanmelding. We hebben hem goed ontvangen. Wil je nu even een paar vragen voor ons alvast beantwoorden?',
                         color: 'success',
                     });
+
+                    setTimeout(() => {
+                        router.visit('/' + guestType.name + '/questions');
+                    }, 5000);
                 }
             });
 
@@ -208,32 +215,33 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
                             <CardFooter></CardFooter>
                         </Card>
                         <EventsAvailability
-                            events={guestType.data.events}
+                            events={guestType.events}
                             guests={guests}
                         ></EventsAvailability>
                         <div className="p-4">
                             <Button color="primary" variant="shadow" type="submit">
                                 Opslaan
                             </Button>
-                            <Button
-                                className="fixed bottom-4 right-4"
-                                color="secondary"
-                                isIconOnly
-                                size="lg"
-                                radius="full"
-                                variant="shadow"
-                                onPress={drawer.onOpen}
-                            >
-                                <svg
-                                    className="size-8 fill-none stroke-current"
-                                    viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true"
-                                >
-                                    <path d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"></path>
-                                </svg>
-                            </Button>
                         </div>
+
+                        <Button
+                            className="z-100 fixed bottom-4 right-4"
+                            color="success"
+                            isIconOnly
+                            size="lg"
+                            radius="full"
+                            variant="shadow"
+                            onPress={drawer.onOpen}
+                        >
+                            <svg
+                                className="size-8 fill-none stroke-current"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                            >
+                                <path d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"></path>
+                            </svg>
+                        </Button>
                     </form>
                 </div>
                 <Drawer

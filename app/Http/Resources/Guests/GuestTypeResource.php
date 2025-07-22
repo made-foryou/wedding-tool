@@ -30,7 +30,7 @@ class GuestTypeResource extends JsonResource
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
 
             'guests' => $this->whenLoaded(
-                relationship: 'guests',
+                relationship: 'availableGuests',
                 value: fn (mixed $value): AnonymousResourceCollection => GuestResource::collection(
                     $value
                 ),

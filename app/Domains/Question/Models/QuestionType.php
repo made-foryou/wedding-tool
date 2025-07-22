@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Domains\Question\Models;
 
 use Database\Factories\QuestionTypeFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -17,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon | null $deleted_at
+ * @property-read Collection<Question> $questions
  */
 class QuestionType extends Model
 {
@@ -30,6 +33,11 @@ class QuestionType extends Model
         'name',
         'description',
     ];
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
 
     /**
      * @return string[]

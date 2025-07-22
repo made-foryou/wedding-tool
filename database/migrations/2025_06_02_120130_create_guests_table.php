@@ -29,7 +29,10 @@ return new class extends Migration
             $table->string('last_name')->nullable();
 
             // Contact information
-            $table->string('email')->unique();
+            $table->string('email')
+                ->unique()
+                ->nullable();
+
             $table->string('phone_number')->nullable();
 
             $table->timestamps();

@@ -42,3 +42,16 @@ export interface Event {
     created_at: string;
     updated_at: string;
 }
+
+export interface QuestionType {
+    id: string;
+    name: string;
+}
+
+export interface Question {
+    id: string;
+    type: QuestionType;
+    label: string;
+    description: string;
+    data: any;
+}

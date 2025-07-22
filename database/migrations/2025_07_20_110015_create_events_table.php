@@ -11,29 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guest_types', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
 
             $table->uuid()
                 ->unique();
 
-            $table->string('name')->unique();
+            $table->foreignId('guest_type_id')
+                ->references('id')
+                ->on('guest_types')
+                ->cascadeOnDelete();
 
-            $table->text('description')->nullable();
-
-            $table->text('present_text')->nullable();
-            $table->text('absent_text')->nullable();
+            $table->string('name');
+            $table->string('location');
+            $table->date('date');
+            $table->string('start');
 
             $table->timestamps();
             $table->softDeletes();
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('guest_types');
     }
 };
