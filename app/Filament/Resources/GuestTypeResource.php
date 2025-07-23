@@ -35,9 +35,11 @@ class GuestTypeResource extends Resource
                     ->columns(['default' => 1, 'md' => 2])
                     ->columnSpan(1),
 
-                Forms\Components\RichEditor::make('present_text'),
+                Forms\Components\RichEditor::make('present_text')
+                    ->hidden(fn () => ! auth()->user()->is_master_of_ceremonies),
 
-                Forms\Components\RichEditor::make('absent_text'),
+                Forms\Components\RichEditor::make('absent_text')
+                    ->hidden(fn () => ! auth()->user()->is_master_of_ceremonies),
             ])
             ->columns([
                 'default' => 1,
