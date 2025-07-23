@@ -142,7 +142,7 @@ export default function PresentPage({ guestType }: PresentPageProps): React.JSX.
 
                     setTimeout(() => {
                         router.visit('/' + guestType.name + '/questions');
-                    }, 5000);
+                    }, 2000);
                 }
             });
 
