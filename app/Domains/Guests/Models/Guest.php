@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $last_name
  * @property string $email (Unique)
  * @property string|null $phone_number
+ * @property bool $has_registered
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
@@ -41,7 +42,7 @@ class Guest extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number'];
+    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number', 'has_registered'];
 
     public function name(): Attribute
     {
@@ -77,6 +78,7 @@ class Guest extends Model
             'last_name' => 'string',
             'email' => 'string',
             'phone_number' => 'string',
+            'has_registered' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

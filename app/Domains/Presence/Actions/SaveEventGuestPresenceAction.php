@@ -28,6 +28,9 @@ final readonly class SaveEventGuestPresenceAction
         $combinations->each(function (EventGuestPresenceData $combination): void {
             $combination->event->guests()->attach($combination->guest);
             $combination->event->save();
+
+            $combination->guest->has_registered = true;
+            $combination->guest->save();
         });
     }
 }

@@ -43,6 +43,7 @@ class GuestResource extends Resource
                 Tables\Columns\TextColumn::make('last_name')->searchable(),
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')->searchable(),
+                Tables\Columns\IconColumn::make('has_registered')->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->sortable()
