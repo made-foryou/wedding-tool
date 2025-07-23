@@ -101,7 +101,7 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
         const formData: FormData = new FormData(e.currentTarget);
 
         guests.forEach((item: Guest) => {
-            formData.set('guests[]', item.id);
+            formData.append('guests[]', item.id);
         });
 
         fetch('/api/save-presence', {
@@ -142,7 +142,7 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
 
                     setTimeout(() => {
                         router.visit('/' + guestType.name + '/questions');
-                    }, 5000);
+                    }, 1000);
                 }
             });
 

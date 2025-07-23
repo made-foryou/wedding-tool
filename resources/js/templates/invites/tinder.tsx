@@ -82,7 +82,7 @@ export default function TinderTemplate({
                 removeWrapper={true}
             />
             <div
-                className="box-border h-[80vh] w-[100vw] overflow-hidden px-[6%] pt-[5vh]"
+                className="box-border h-[80%] max-h-[850px] w-[100vw] max-w-full overflow-hidden px-[6%] pt-[5vh]"
                 onClick={onBio}
             >
                 <Swiper
@@ -94,7 +94,7 @@ export default function TinderTemplate({
                     onReachEnd={absent}
                     onReachBeginning={present}
                 >
-                    <SwiperSlide className="h-100 rounded-3xl">
+                    <SwiperSlide className="h-full rounded-3xl">
                         <Image
                             src={
                                 'https://images.unsplash.com/photo-1501901609772-df0848060b33?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y291cGxlfGVufDB8fDB8fHww'
@@ -107,7 +107,7 @@ export default function TinderTemplate({
                             }}
                         />
                     </SwiperSlide>
-                    <SwiperSlide className="h-100 rounded-3xl">
+                    <SwiperSlide className="h-full rounded-3xl">
                         <Image
                             src={
                                 'https://plus.unsplash.com/premium_photo-1676667573156-7d14e8b79ad3?q=80&w=5670&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -120,7 +120,7 @@ export default function TinderTemplate({
                             }}
                         />
                     </SwiperSlide>
-                    <SwiperSlide className="h-100 rounded-3xl">
+                    <SwiperSlide className="h-full rounded-3xl">
                         <Image
                             src={
                                 'https://images.unsplash.com/photo-1519307212971-dd9561667ffb?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fFNhZCUyMGNvdXBsZXxlbnwwfHwwfHx8MA%3D%3D'
@@ -135,7 +135,7 @@ export default function TinderTemplate({
                     </SwiperSlide>
                 </Swiper>
             </div>
-            <div className="box-border h-[20vh] w-full px-16 py-10">
+            <div className="box-border h-[20%] w-full px-16 py-10">
                 <div className="flex items-center justify-between">
                     <Tooltip content="Nee, ik ben niet aanwezig">
                         <Button

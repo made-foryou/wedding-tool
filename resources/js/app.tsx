@@ -22,7 +22,9 @@ createInertiaApp({
             <StrictMode>
                 <HeroUIProvider>
                     <ToastProvider />
-                    <App {...props} />
+                    <div className="absolute left-1/2 top-1/2 h-full max-h-[1000px] w-full max-w-[500px] -translate-x-1/2 -translate-y-1/2 overflow-y-auto overflow-x-hidden">
+                        <App {...props} />
+                    </div>
                 </HeroUIProvider>
             </StrictMode>,
         );

@@ -31,6 +31,8 @@ export default function QuestionsPage({
 }: QuestionsPageProps): React.JSX.Element {
     const props = usePage().props;
 
+    console.log(guests);
+
     const askForEmail = (guest: Guest) => {
         if (!guest.email) {
             return <Input name={guest.id + ':email'} label={'E-mailadres'} required />;
@@ -73,7 +75,6 @@ export default function QuestionsPage({
     return (
         <>
             <div className="mb-4">
-                ;{' '}
                 <Image
                     src={'/assets/logo.png'}
                     alt="Menno & Muriël"
