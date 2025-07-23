@@ -19,6 +19,122 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
         }
     };
 
+    const bioContent = () => {
+        if (guestType.name === 'Weekender') {
+            return (
+                <>
+                    <p>
+                        Wie had ooit gedacht dat een swipe naar rechts op Tinder, gevolgd door een
+                        noodtempo in ontwikkeling van daten, ouders eerder voorstellen dan vrienden
+                        en alleen maar kunnen wandelen, spelletjes spelen en avondklokken omzeilen,
+                        ons hier zou brengen.. Je zou het kunnen zien als een flink uit de hand
+                        gelopen knuffelcontact in Coronatijd..
+                    </p>
+                    <p>
+                        Maar ja, alleen samen krijg je een hypotheek..
+                        <br />
+                        <i className="text-sm">
+                            (nee, we trouwen niet voor het huis, maar het was toen een populaire
+                            Tinder-bio)
+                        </i>
+                    </p>
+                    <p>
+                        Nu zijn we hier niet meer voor de spelletjes (alleen bordspelletjes) en
+                        willen we jou uitnodigen voor onze bruiloft op 24, 25 en 26 oktober 2025!
+                    </p>
+                    <p>
+                        🍻 <strong>Vrijdag 24 oktober, 20:00 - 23:30</strong>
+                        <br />
+                        Incheck: vanaf 15:00
+                        <br />
+                        Start borrel / spelletjesavond: 20:00
+                        <br />
+                        Eindtijd: 23:30
+                        <br />
+                    </p>
+                    <p>
+                        💍<strong>Zaterdag 25 oktober, 11:00 - 00:30</strong>
+                        <br />
+                        🥐 Brunch: 11:00 - 13:00
+                        <br />
+                        👰‍♀️Ceremonie: 13:30
+                        <br />
+                        🥂Proosten & borrel
+                        <br />
+                        🍟Diner: 17:00
+                        <br />
+                        🪩Inloop feest: 19:30
+                        <br />
+                        💃Start feest: 20:00
+                        <br />
+                        👋Einde feest: 00:30
+                    </p>
+                    <p>
+                        ☕ <strong>Zondag 26 oktober, 10:00 - je klaar bent met ontbijten</strong>
+                    </p>
+                    <p>
+                        ✨ Dresscode vrijdag: Feestelijk
+                        <br />✨ <strong>Dresscode zaterdag: Dress to impress</strong>
+                    </p>
+                    <p>
+                        Meer uitleg nodig? Swipe naar rechts of geef die (gratis) superlike, vul het
+                        formulier in en check je mail!
+                    </p>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <p>
+                    Wie had ooit gedacht dat een swipeje naar rechts, een ‘zo, dus jij zit in de
+                    online marketing, volgens mij ben jij ook goed in de marketing voor jezelf’ ..
+                    Gevolgd door een lichte cringe, wat paniek om de snelheid en vervolgens een
+                    discussie over een spelregel, ons hier zou brengen. Inmiddels zijn we de
+                    one-night-stand fase redelijk voorbij.
+                </p>
+                <p>
+                    Want ja, alleen samen kregen we die hypotheek.. 😜
+                    <br />
+                    <i className="text-sm">
+                        (nee, we trouwen niet voor het huis, maar het was toen een populaire
+                        Tinder-bio)
+                    </i>
+                </p>
+                <p>
+                    Deze match was voorbestemd voor meer, dus we gaan trouwen.
+                    <br />
+                    Nu is het tijd dat jij ook naar rechts swipet en ‘ja’ zegt tegen een feestje!
+                </p>
+                <p>
+                    Een superlike mag, niks moet waar we hopen zeker op jouw aanwezigheid op:
+                    <br />
+                    📅 25 oktober 2025
+                    <br />
+                    🎶{' '}
+                    <strong>
+                        Locatie: Landgoed Twistvliet @ Koningin Emmaweg 4, 4354 KC Vrouwenpolder
+                    </strong>
+                    <br />
+                    ✨ Dresscode: Dress to impress!✨
+                    <br />
+                    🪩 <strong>Inloop:</strong> 19:30
+                    <br />
+                    🤗 + 💃 <strong>Welkom & Openingsdans:</strong> 20:00 <br />
+                    👋 Eind van het feest: 00:30
+                    <br />
+                    Cadeautip: ✉️
+                </p>
+                <p>Breng je moves, je glimlach en je beste dansschoenen.</p>
+                <p>
+                    En hé, wil jij ook een beschuitje met ons eten? 😏 Dat kan zondagochtend vanaf
+                    10:00, aanmelden kan via het formulier.
+                </p>
+                <p>Meer informatie volgt na aanmelding in je mail!</p>
+            </>
+        );
+    };
+
     return (
         <>
             <Invite model={guestType} />
@@ -40,46 +156,7 @@ export default function BioPage({ guestType }: BioPageProps): React.JSX.Element 
                                     removeWrapper={true}
                                 />
                             </ModalHeader>
-                            <ModalBody>
-                                <h3>
-                                    De allerlaatste, ja, echt de laatste: feestje met René van
-                                    Dalen!
-                                </h3>
-                                <p>
-                                    Woon je niet op ‘s-Gravendeel, dan kunnen we ons voorstellen dat
-                                    je denkt: Wie is dat..? Woon je wel op ‘s-Gravendeel, dan kun je
-                                    er eigenlijk niet omheen. Dé FeestDJ van het dorp. Zelf vinden
-                                    we het echt fantastisch dat hij wil draaien op onze bruiloft.
-                                    Muriël is ongeveer met zijn DJ-kunsten opgegroeid, en
-                                    waarschijnlijk zijn haar dansskills hier ook op gebaseerd (die
-                                    handjes, die handjes in de lucht!).
-                                </p>
-                                <p>
-                                    Als we denken aan René dan kunnen we zoveel momenten opnoemen
-                                    waar hij heeft gedraaid. Vooral voor Muriël is dit een flinke
-                                    trip-down-memory-lane.
-                                </p>
-                                <p>
-                                    Zo dacht Muriël direct aan de Pietendisco op basisschool
-                                    Bouwsteen, waar je in de hal met de hele bovenbouw (of
-                                    onderbouw) ging feesten ter afsluiting van het sinterklaasfeest.
-                                    Echter twijfelt ze zelf wel of ze dit mee heeft gemaakt als kind
-                                    of in de jaren dat ze hielp bij haar moeder bij de kleuters op
-                                    vrije dagen. Het kan overigens ook nog zijn vanuit de periode
-                                    dat ze zwarte piet speelde bij het Sinterklaasfeest.
-                                </p>
-                                <p>
-                                    Ook was René als dj aanwezig op een van de eerste feesten die ze
-                                    organiseerde, namelijk de afsluiting van groep 8 van haar
-                                    broertje: Jasper.
-                                </p>
-                                <p>
-                                    René was niet alleen te vinden op een feestje van Jasper, maar
-                                    ook op een feestje van de ouders van Muriël: Piet & Jeanette.
-                                    Muriël was ceremoniemeester toen zij hun jubileum: 25 jaar, 25
-                                    weken, 25 dagen mochten vieren, was René aanwezig als dj.
-                                </p>
-                            </ModalBody>
+                            <ModalBody className="p-8">{bioContent()}</ModalBody>
                         </>
                     )}
                 </ModalContent>

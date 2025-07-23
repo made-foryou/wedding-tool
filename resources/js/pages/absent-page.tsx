@@ -160,14 +160,14 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                                 <ModalHeader className="flex flex-col gap-1">
                                     Aanmelding
                                 </ModalHeader>
-                                <ModalBody className="py-8">
+                                <ModalBody className="pb-8">
                                     <p>
-                                        Wat ontzettend leuk dat je aanwezig bent op onze bruiloft!
+                                        Hé, wat jammer dat je niet op onze bruiloft kunt zijn. Zou
+                                        je aan willen geven wie je bent en of je alleen jezelf of
+                                        ook anderen (kan in de vervolgstap) wilt afmelden! Zoek even
+                                        jouw naam in de lijst!
                                     </p>
-                                    <p>
-                                        Selecteer hieronder wie je bent en ga verder om nog meer
-                                        mensen aan te melden en je gegevens achter te laten.
-                                    </p>
+
                                     <Autocomplete
                                         defaultItems={guestOptions()}
                                         label="Wie ben jij?"
@@ -208,12 +208,16 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                                 </h3>
                             </CardHeader>
                             <CardBody>
-                                <p>
-                                    Wat ontzettend leuk dat je er bij bent wanneer wij gaan trouwen!
+                                <p className="mb-4">
+                                    Wat jammer dat je niet aanwezig bent op onze bruiloft! We hebben
+                                    de checkboxes uitgezet, en gaan er vanuit dat je bij
+                                    onderstaande momenten dus niet aanwezig bent.
                                 </p>
                                 <p>
-                                    Geef hier onder je aanwezigheid op voor de verschillende dagen
-                                    en/of meld nog meer mensen aan:
+                                    Klopt dat niet helemaal? Of heb je per ongeluk naar links
+                                    geswipet? Geen zorgen! Dan kun je hier de checkboxes van de
+                                    momenten dat je wel aanwezig bent, aanvinken. Zo kom je gewoon
+                                    weer in het aanmeldproces terecht!
                                 </p>
                             </CardBody>
                             <CardFooter></CardFooter>
@@ -223,30 +227,20 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                             guests={guests}
                             selected={false}
                         ></EventsAvailability>
-                        <div className="p-4">
-                            <Button color="primary" variant="shadow" type="submit">
+                        <div className="space-y-4 p-4">
+                            <Button
+                                color="success"
+                                fullWidth={true}
+                                variant="shadow"
+                                onPress={drawer.onOpen}
+                            >
+                                Nog een gast aanmelden
+                            </Button>
+
+                            <Button color="primary" fullWidth={true} variant="shadow" type="submit">
                                 Opslaan
                             </Button>
                         </div>
-
-                        <Button
-                            className="fixed bottom-4 right-4 z-30"
-                            color="success"
-                            isIconOnly
-                            size="lg"
-                            radius="full"
-                            variant="shadow"
-                            onPress={drawer.onOpen}
-                        >
-                            <svg
-                                className="size-8 fill-none stroke-current"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                                aria-hidden="true"
-                            >
-                                <path d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM3 19.235v-.11a6.375 6.375 0 0 1 12.75 0v.109A12.318 12.318 0 0 1 9.374 21c-2.331 0-4.512-.645-6.374-1.766Z"></path>
-                            </svg>
-                        </Button>
                     </form>
                 </div>
                 <Drawer

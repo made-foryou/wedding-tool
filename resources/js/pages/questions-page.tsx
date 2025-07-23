@@ -85,11 +85,8 @@ export default function QuestionsPage({
             </div>
             <div className="p-4">
                 <div className="mb-6">
-                    <h3 className="font-bold">Beste {guests[0].name},</h3>
-                    <p>
-                        Wil je nu hieronder een aantal vragen voor{' '}
-                        {guests.length === 1 ? 'jou' : 'jullie'} beantwoorden?
-                    </p>
+                    <h3 className="font-bold">Lieve {guests[0].name},</h3>
+                    <p>Zou je onderstaande vragen voor ons willen beantwoorden?</p>
                 </div>
                 <form onSubmit={onSubmitHandler}>
                     <div className="mb-4 mt-4 space-y-4">

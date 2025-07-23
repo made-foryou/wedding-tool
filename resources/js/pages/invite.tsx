@@ -21,5 +21,12 @@ export default function Invite({ model }: InvitePageProps): React.JSX.Element {
         router.visit('/' + model.name + '/bio');
     };
 
-    return <Template onPresent={acceptHandler} onAbsent={absentHandler} onBio={bioHandler} />;
+    return (
+        <Template
+            onPresent={acceptHandler}
+            onAbsent={absentHandler}
+            onBio={bioHandler}
+            type={model.name === 'Weekender' ? 'weekend' : 'avond'}
+        />
+    );
 }
