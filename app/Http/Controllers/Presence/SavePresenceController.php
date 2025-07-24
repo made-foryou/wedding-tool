@@ -15,10 +15,12 @@ class SavePresenceController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $guestIds = $request->get('guests', []);
+        $guests = $request->except('guests');
 
         $data = collect(array_keys($request->except('guests')))
             ->map(fn (string $combination): EventGuestPresenceData => EventGuestPresenceData::fromString($combination));
+
+        $guestIds = $request->get('guests', []);
 
         $guests = Guest::query()->whereIn('uuid', $guestIds)->get();
 
