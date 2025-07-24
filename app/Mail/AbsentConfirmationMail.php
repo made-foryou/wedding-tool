@@ -29,6 +29,7 @@ class AbsentConfirmationMail extends Mailable
     {
         return new Envelope(
             subject: 'Afmelding bruiloft Menno & Muriël',
+            replyTo: ['mennoenmuriel@gmail.com'],
         );
     }
 

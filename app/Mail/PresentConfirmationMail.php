@@ -29,6 +29,7 @@ class PresentConfirmationMail extends Mailable
     {
         return new Envelope(
             subject: 'Aanmelding bruiloft Menno & Muriël',
+            replyTo: ['mennoenmuriel@gmail.com'],
         );
     }
 
