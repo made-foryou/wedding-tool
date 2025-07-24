@@ -12,6 +12,7 @@ export interface GuestType {
     updated_at: string;
 
     guests: Array<Guest>;
+    availableGuests: Array<Guest>;
     events: Array<Event>;
 }
 
@@ -27,6 +28,8 @@ export interface Guest {
 
     email: string;
     phone_number: string | null;
+
+    has_registered: boolean;
 
     created_at: string;
     updated_at: string;

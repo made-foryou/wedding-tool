@@ -34,10 +34,6 @@ type Option = {
     key: string;
 };
 
-function alreadySelected(found: Guest, selected: Array<Guest>): boolean {
-    return selected.filter((item: Guest): boolean => item.id === found.id).length !== 0;
-}
-
 export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.Element {
     const { isOpen, onOpenChange, onClose } = useDisclosure({
         defaultOpen: true,
@@ -49,14 +45,24 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
 
     const [selected, setSelected] = useState<Guest | null>(null);
 
-    const selectionChangeHandler = (key: Key | null) => {
+    const selectGuest = (key: Key | null) => {
         const found: Guest | undefined = guestType.guests.find(
             (guest: Guest): boolean => guest.id === key,
         );
 
-        if (found) {
+        if (found !== undefined) {
+            addGuestToSelection(found);
+        }
+
+        onClose();
+    };
+
+    const addGuestToSelection = (guest: Guest) => {
+        const alreadySelected = guests.find((item: Guest) => item.id === guest.id);
+
+        if (alreadySelected === undefined) {
             const clone = guests;
-            clone.push(found);
+            clone.push(guest);
 
             setGuests(clone);
 
@@ -76,22 +82,20 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
 
     const onSubmitHandler = () => {
         if (selected !== null) {
-            const clone = guests;
-            clone.push(selected);
-
-            setGuests(clone);
+            addGuestToSelection(selected);
         }
     };
 
-    const guestOptions = (): Option[] => {
-        return guestType.guests.map((item: Guest): Option => ({ label: item.name, key: item.id }));
-    };
+    const allGuestOptions = (): Option[] =>
+        guestType.guests.map((item: Guest): Option => ({ label: item.name, key: item.id }));
 
-    const otherGuests = (): Option[] => {
-        return guestType.guests
-            .filter((item: Guest) => !alreadySelected(item, guests))
+    const unRegisteredGuestOptions = (): Option[] =>
+        guestType.guests
+            // Filter out guests who have already been registered
+            .filter((item: Guest): boolean => !item.has_registered)
+            // Filter out guests who have already been selected
+            .filter((item: Guest): boolean => guests.find((guest: Guest) => guest.id === item.id) === undefined)
             .map((item: Guest): Option => ({ label: item.name, key: item.id }));
-    };
 
     const props = usePage().props;
 
@@ -169,10 +173,10 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                                     </p>
 
                                     <Autocomplete
-                                        defaultItems={guestOptions()}
+                                        defaultItems={allGuestOptions()}
                                         label="Wie ben jij?"
                                         placeholder="Zoek & selecteer jezelf"
-                                        onSelectionChange={selectionChangeHandler}
+                                        onSelectionChange={selectGuest}
                                     >
                                         {(item) => (
                                             <AutocompleteItem key={item.key}>
@@ -234,7 +238,7 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                                 variant="shadow"
                                 onPress={drawer.onOpen}
                             >
-                                Nog een gast aanmelden
+                                Nog een gast afmelden
                             </Button>
 
                             <Button color="primary" fullWidth={true} variant="shadow" type="submit">
@@ -253,11 +257,11 @@ export default function AbsentPage({ guestType }: AbsentPageProps): React.JSX.El
                         {(onClose) => (
                             <>
                                 <DrawerHeader className="flex flex-col gap-1">
-                                    Nieuw persoon aanmelden
+                                    Nieuw persoon afmelden
                                 </DrawerHeader>
                                 <DrawerBody>
                                     <Autocomplete
-                                        defaultItems={otherGuests()}
+                                        defaultItems={unRegisteredGuestOptions()}
                                         label="Wie wil je aanmelden"
                                         placeholder="Zoek & selecteer"
                                         onSelectionChange={onSelectSelectedHandler}

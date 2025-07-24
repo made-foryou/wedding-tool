@@ -19,7 +19,7 @@ class AbsentPageController extends Controller
             return redirect()->route('questions', ['guestType' => $guestType]);
         }
 
-        $guestType->load('availableGuests', 'events');
+        $guestType->load('availableGuests', 'guests', 'events');
 
         return Inertia::render('absent-page', [
             'guestType' => new GuestTypeResource($guestType),

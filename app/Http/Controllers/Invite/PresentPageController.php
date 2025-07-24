@@ -21,7 +21,7 @@ class PresentPageController extends Controller
             return redirect()->route('questions', ['guestType' => $guestType]);
         }
 
-        $guestType->load('availableGuests', 'events');
+        $guestType->load('availableGuests', 'guests', 'events');
 
         return Inertia::render('present-page', [
             'guestType' => new GuestTypeResource($guestType),
