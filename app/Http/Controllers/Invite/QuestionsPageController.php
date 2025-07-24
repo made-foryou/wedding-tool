@@ -9,6 +9,7 @@ use App\Domains\Question\Models\Question;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\Guests\GuestResource;
+use App\Http\Resources\Guests\GuestTypeResource;
 use App\Http\Resources\QuestionResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,6 +38,7 @@ class QuestionsPageController extends Controller
             ->get();
 
         return Inertia::render('questions-page', [
+            'guestType' => new GuestTypeResource($guestType),
             'questions' => QuestionResource::collection($questions),
             'events' => EventResource::collection(Event::query()->get()),
             'guests' => GuestResource::collection($selectedGuests),

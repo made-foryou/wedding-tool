@@ -1,4 +1,4 @@
-import { Event, Guest, Question } from '@/types/resources';
+import { Event, Guest, GuestType, Question } from '@/types/resources';
 import {
     addToast,
     Button,
@@ -15,23 +15,23 @@ import {
     SelectItem,
     Textarea,
 } from '@heroui/react';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import React from 'react';
 import Element = React.JSX.Element;
 
 type QuestionsPageProps = {
+    guestType: GuestType;
     questions: Array<Question>;
     events: Array<Event>;
     guests: Array<Guest>;
 };
 
 export default function QuestionsPage({
+    guestType,
     questions,
     guests,
 }: QuestionsPageProps): React.JSX.Element {
     const props = usePage().props;
-
-    console.log(guests);
 
     const askForEmail = (guest: Guest) => {
         if (!guest.email) {
@@ -63,9 +63,9 @@ export default function QuestionsPage({
                     color: 'success',
                 });
 
-                setTimeout(() => {
-                    console.log('REDIRECT TO SUCCESS PAGE');
-                }, 5000);
+                window.setTimeout(() => {
+                    router.visit('/' + guestType.name + '/thank-you');
+                }, 1000);
             }
         });
 

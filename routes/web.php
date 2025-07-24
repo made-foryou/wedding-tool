@@ -21,6 +21,9 @@ Route::prefix('{guestType:name}')->group(function () {
 
     Route::get('/questions', Invite\QuestionsPageController::class)
         ->name('questions');
+
+    Route::get('/thank-you', Invite\ThankYouPageController::class)
+        ->name('thank-you');
 });
 
 Route::prefix('api')->group(function () {

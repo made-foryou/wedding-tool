@@ -22,15 +22,6 @@ class SavePresenceController extends Controller
 
         $guests = Guest::query()->whereIn('uuid', $guestIds)->get();
 
-        $alreadyKnown = $data->filter(fn (EventGuestPresenceData $data) => $data->guest->events->isNotEmpty());
-
-        if ($alreadyKnown->isNotEmpty()) {
-            return response()->json([
-                'already_known' => $alreadyKnown->pluck('guest.name')
-                    ->unique(),
-            ], 400);
-        }
-
         SaveEventGuestPresenceAction::execute($data, $guests);
 
         $request->session()->put('guests', $guests->pluck('uuid')->unique());
