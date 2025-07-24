@@ -4,11 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Domains\Guests\Models\Guest;
 use App\Filament\Resources\GuestResource\Pages;
+use App\Filament\Resources\GuestResource\RelationManagers;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -68,6 +68,14 @@ class GuestResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\AnswersRelationManager::class,
+            RelationManagers\EventsRelationManager::class,
+        ];
+    }
+
     /**
      * @return array<int, BaseFilter>
      */
@@ -80,13 +88,6 @@ class GuestResource extends Resource
         }
 
         return $filters;
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
     }
 
     public static function getPages(): array

@@ -1,37 +1,33 @@
 <?php
 
-namespace App\Filament\Resources\GuestTypeResource\RelationManagers;
+namespace App\Filament\Resources\GuestResource\RelationManagers;
 
-use App\Filament\Resources\GuestResource;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class GuestsRelationManager extends RelationManager
+class EventsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'guests';
+    protected static string $relationship = 'events';
 
     public function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\TextInput::make('first_name')->required()->maxLength(255),
-            Forms\Components\TextInput::make('last_name')->maxLength(255),
-            Forms\Components\TextInput::make('email')->email()->required()->maxLength(255),
-            Forms\Components\TextInput::make('phone_number')->tel()->maxLength(255),
+            Forms\Components\TextInput::make('name'),
         ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('first_name')
+            ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')->searchable(),
-                Tables\Columns\TextColumn::make('last_name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')->searchable(),
+                Tables\Columns\TextColumn::make('name')->searchable(),
+                Tables\Columns\TextColumn::make('location')->searchable(),
+                Tables\Columns\TextColumn::make('date')->date(),
+                Tables\Columns\TextColumn::make('start'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->sortable()
@@ -45,7 +41,6 @@ class GuestsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters(GuestResource::tableFilters('relation'))
             ->headerActions([Tables\Actions\CreateAction::make()])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -59,6 +54,6 @@ class GuestsRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return false;
+        return true;
     }
 }
