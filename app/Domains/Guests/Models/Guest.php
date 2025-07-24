@@ -5,7 +5,6 @@ namespace App\Domains\Guests\Models;
 use App\Domains\Guests\QueryBuilder\GuestQueryBuilder;
 use App\Domains\Presence\Models\Event;
 use App\Domains\Question\Models\Question;
-use App\Models\Answer;
 use Database\Factories\GuestFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,7 +13,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -28,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property string $email (Unique)
  * @property string|null $phone_number
  * @property bool $has_registered
+ * @property bool $email_sent
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
  * @property-read Carbon $deleted_at
@@ -45,7 +44,7 @@ class Guest extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number', 'has_registered'];
+    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number', 'has_registered', 'email_sent'];
 
     public function name(): Attribute
     {
@@ -88,6 +87,7 @@ class Guest extends Model
             'email' => 'string',
             'phone_number' => 'string',
             'has_registered' => 'boolean',
+            'email_sent' => 'boolean',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',

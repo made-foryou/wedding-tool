@@ -44,6 +44,7 @@ class GuestResource extends Resource
                 Tables\Columns\TextColumn::make('email')->searchable(),
                 Tables\Columns\TextColumn::make('phone_number')->searchable(),
                 Tables\Columns\IconColumn::make('has_registered')->boolean(),
+                Tables\Columns\IconColumn::make('email_sent')->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->sortable()

@@ -52,6 +52,11 @@ class SaveAnswersController extends Controller
                 );
             }
 
+            if (true === $guest->email_sent) {
+                return;
+            }
+
+
             if ($guest->events->isNotEmpty()) {
                 Mail::to($guest->email)
                     ->send(new PresentConfirmationMail($guest));
@@ -59,6 +64,9 @@ class SaveAnswersController extends Controller
                 Mail::to($guest->email)
                     ->send(new AbsentConfirmationMail($guest));
             }
+
+            $guest->email_sent = true;
+            $guest->save();
         });
 
         return response()->json([]);
