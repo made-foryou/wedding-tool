@@ -57,13 +57,17 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
         }
 
         foreach ($questions as $question) {
-            if ($question->guest_type_id !== $row->guest_type_id) {
+            if ($question->guest_type_id !== null && $question->guest_type_id !== $row->guest_type_id) {
                 $values[] = 'n.v.t.';
 
                 continue;
             }
 
-            $values[] = $row->questions->find($question->id)?->answer ?? '-';
+            $answer = $row->questions->filter(
+                fn (Question $item): bool => $item->id === $question->id
+            )->first();
+
+            $values[] = $answer?->pivot->answer ?? '-';
         }
 
         return $values;
