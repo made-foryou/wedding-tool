@@ -45,9 +45,6 @@ class GuestResource extends Resource
                 Tables\Columns\TextColumn::make('phone_number')->searchable(),
                 Tables\Columns\IconColumn::make('has_registered')->boolean(),
                 Tables\Columns\IconColumn::make('email_sent')->boolean(),
-                Tables\Columns\IconColumn::make('absent')
-                    ->boolean()
-                    ->getStateUsing(fn (Guest $record): bool => $record->events->isEmpty()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->since()
                     ->sortable()
