@@ -2,35 +2,52 @@
 
 namespace App\Filament\Resources;
 
+use App\Domains\Guests\Enums\PresenceExportType;
 use App\Domains\Guests\Models\Guest;
-use App\Filament\Resources\GuestResource\Pages;
-use App\Filament\Resources\GuestResource\RelationManagers;
-use Filament\Forms;
-use Filament\Forms\Form;
+use App\Exports\PresenceExport;
+use App\Filament\Resources\GuestResource\Pages\CreateGuest;
+use App\Filament\Resources\GuestResource\Pages\EditGuest;
+use App\Filament\Resources\GuestResource\Pages\ListGuests;
+use App\Filament\Resources\GuestResource\Pages\ViewGuest;
+use App\Filament\Resources\GuestResource\RelationManagers\AnswersRelationManager;
+use App\Filament\Resources\GuestResource\RelationManagers\EventsRelationManager;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuestResource extends Resource
 {
     protected static ?string $model = Guest::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static ?string $navigationGroup = 'Guests';
+    protected static string|\UnitEnum|null $navigationGroup = 'Guests';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\Select::make('guest_type_id')
+        return $schema->components([
+            Select::make('guest_type_id')
                 ->relationship('guestType', 'name')
                 ->required(),
-            Forms\Components\TextInput::make('first_name')->required()->maxLength(255),
-            Forms\Components\TextInput::make('last_name')->maxLength(255),
-            Forms\Components\TextInput::make('email')->email()->maxLength(255),
-            Forms\Components\TextInput::make('phone_number')->tel()->maxLength(255),
+            TextInput::make('first_name')->required()->maxLength(255),
+            TextInput::make('last_name')->maxLength(255),
+            TextInput::make('email')->email()->maxLength(255),
+            TextInput::make('phone_number')->tel()->maxLength(255),
         ]);
     }
 
@@ -38,42 +55,59 @@ class GuestResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('guestType.name')->sortable(),
-                Tables\Columns\TextColumn::make('first_name')->searchable(),
-                Tables\Columns\TextColumn::make('last_name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')->searchable(),
-                Tables\Columns\IconColumn::make('has_registered')->boolean(),
-                Tables\Columns\IconColumn::make('email_sent')->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('guestType.name')->sortable(),
+                TextColumn::make('first_name')->searchable(),
+                TextColumn::make('last_name')->searchable(),
+                TextColumn::make('email')->searchable(),
+                TextColumn::make('phone_number')->searchable(),
+                IconColumn::make('has_registered')->boolean(),
+                IconColumn::make('email_sent')->boolean(),
+                TextColumn::make('created_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters(self::tableFilters())
-            ->actions([Tables\Actions\ViewAction::make(), Tables\Actions\EditAction::make()])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                Action::make('Exporteren')
+                    ->schema([
+                        Select::make('type')
+                            ->options(PresenceExportType::options())
+                            ->required(),
+                    ])
+                    ->action(function (array $data) {
+                        $type = PresenceExportType::tryFrom($data['type']);
+
+                        if ($type) {
+                            return Excel::download(new PresenceExport($type), 'guests.xlsx');
+                        }
+
+                        return false;
+                    }),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            RelationManagers\AnswersRelationManager::class,
-            RelationManagers\EventsRelationManager::class,
+            AnswersRelationManager::class,
+            EventsRelationManager::class,
         ];
     }
 
@@ -85,7 +119,7 @@ class GuestResource extends Resource
         $filters = [];
 
         if ($context === 'resource') {
-            $filters[] = Tables\Filters\TrashedFilter::make();
+            $filters[] = TrashedFilter::make();
         }
 
         return $filters;
@@ -94,10 +128,10 @@ class GuestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGuests::route('/'),
-            'create' => Pages\CreateGuest::route('/create'),
-            'view' => Pages\ViewGuest::route('/{record}'),
-            'edit' => Pages\EditGuest::route('/{record}/edit'),
+            'index' => ListGuests::route('/'),
+            'create' => CreateGuest::route('/create'),
+            'view' => ViewGuest::route('/{record}'),
+            'edit' => EditGuest::route('/{record}/edit'),
         ];
     }
 

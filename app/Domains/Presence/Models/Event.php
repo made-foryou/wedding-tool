@@ -34,7 +34,7 @@ use Illuminate\Support\Carbon;
  */
 class Event extends Model
 {
-    /** @use HasFactory<\Database\Factories\EventFactory> */
+    /** @use HasFactory<EventFactory> */
     use HasFactory;
 
     use HasUuids;

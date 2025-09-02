@@ -2,13 +2,31 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\ForceDeleteBulkAction;
+use Filament\Actions\RestoreBulkAction;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Infolists\Components\TextEntry;
+use App\Filament\Resources\GuestTypeResource\RelationManagers\GuestsRelationManager;
+use App\Filament\Resources\GuestTypeResource\Pages\ListGuestTypes;
+use App\Filament\Resources\GuestTypeResource\Pages\CreateGuestType;
+use App\Filament\Resources\GuestTypeResource\Pages\ViewGuestType;
+use App\Filament\Resources\GuestTypeResource\Pages\EditGuestType;
 use App\Domains\Guests\Models\GuestType;
 use App\Filament\Resources\GuestTypeResource\Pages;
 use App\Filament\Resources\GuestTypeResource\RelationManagers;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Infolists;
-use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,26 +37,26 @@ class GuestTypeResource extends Resource
 {
     protected static ?string $model = GuestType::class;
 
-    protected static ?string $navigationIcon = 'carbon-data-categorical';
+    protected static string | \BackedEnum | null $navigationIcon = 'carbon-data-categorical';
 
-    protected static ?string $navigationGroup = 'Guests';
+    protected static string | \UnitEnum | null $navigationGroup = 'Guests';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Section::make('Data')
+        return $schema
+            ->components([
+                Section::make('Data')
                     ->schema([
-                        Forms\Components\TextInput::make('name')->required()->maxLength(255),
-                        Forms\Components\Textarea::make('description')->columnSpanFull(),
+                        TextInput::make('name')->required()->maxLength(255),
+                        Textarea::make('description')->columnSpanFull(),
                     ])
                     ->columns(['default' => 1, 'md' => 2])
                     ->columnSpan(1),
 
-                Forms\Components\RichEditor::make('present_text')
+                RichEditor::make('present_text')
                     ->hidden(fn () => ! auth()->user()->is_master_of_ceremonies),
 
-                Forms\Components\RichEditor::make('absent_text')
+                RichEditor::make('absent_text')
                     ->hidden(fn () => ! auth()->user()->is_master_of_ceremonies),
             ])
             ->columns([
@@ -51,39 +69,39 @@ class GuestTypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('created_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([Tables\Filters\TrashedFilter::make()])
-            ->actions([Tables\Actions\ViewAction::make(), Tables\Actions\EditAction::make()])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
+            ->filters([TrashedFilter::make()])
+            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
                 ]),
             ]);
     }
 
-    public static function infolist(Infolist $list): Infolist
+    public static function infolist(Schema $schema): Schema
     {
-        return $list
-            ->schema([
-                Infolists\Components\Fieldset::make('Guest type')
+        return $schema
+            ->components([
+                Fieldset::make('Guest type')
                     ->schema([
-                        Infolists\Components\TextEntry::make('name'),
-                        Infolists\Components\TextEntry::make('description'),
+                        TextEntry::make('name'),
+                        TextEntry::make('description'),
                     ])
                     ->columns(['default' => 1, 'md' => 2])
                     ->columnSpan(1),
@@ -96,16 +114,16 @@ class GuestTypeResource extends Resource
 
     public static function getRelations(): array
     {
-        return [RelationManagers\GuestsRelationManager::class];
+        return [GuestsRelationManager::class];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGuestTypes::route('/'),
-            'create' => Pages\CreateGuestType::route('/create'),
-            'view' => Pages\ViewGuestType::route('/{record}'),
-            'edit' => Pages\EditGuestType::route('/{record}/edit'),
+            'index' => ListGuestTypes::route('/'),
+            'create' => CreateGuestType::route('/create'),
+            'view' => ViewGuestType::route('/{record}'),
+            'edit' => EditGuestType::route('/{record}/edit'),
         ];
     }
 

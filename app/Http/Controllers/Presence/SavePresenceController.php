@@ -17,7 +17,7 @@ class SavePresenceController extends Controller
     {
         $guests = $request->except('guests');
 
-        $data = collect(array_keys($request->except('guests')))
+        $data = collect(array_keys($guests))
             ->map(fn (string $combination): EventGuestPresenceData => EventGuestPresenceData::fromString($combination));
 
         $guestIds = $request->get('guests', []);

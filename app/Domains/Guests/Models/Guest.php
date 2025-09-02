@@ -32,6 +32,7 @@ use Illuminate\Support\Carbon;
  * @property-read Carbon $deleted_at
  * @property-read GuestType $guestType
  * @property-read Collection<Event> $events
+ * @property-read Collection<Question> $questions
  *
  * @method static GuestFactory factory($count = null, $state = [])
  * @method static GuestQueryBuilder query()
@@ -44,7 +45,15 @@ class Guest extends Model
     use HasUuids;
     use SoftDeletes;
 
-    protected $fillable = ['guest_type_id', 'first_name', 'last_name', 'email', 'phone_number', 'has_registered', 'email_sent'];
+    protected $fillable = [
+        'guest_type_id',
+        'first_name',
+        'last_name',
+        'email',
+        'phone_number',
+        'has_registered',
+        'email_sent',
+    ];
 
     public function name(): Attribute
     {

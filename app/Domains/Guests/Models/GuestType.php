@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
  */
 class GuestType extends Model
 {
-    /** @use HasFactory<\Database\Factories\GuestTypeFactory> */
+    /** @use HasFactory<GuestTypeFactory> */
     use HasFactory;
 
     use HasUuids;
