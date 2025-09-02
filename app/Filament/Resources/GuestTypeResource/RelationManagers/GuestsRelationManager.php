@@ -2,9 +2,17 @@
 
 namespace App\Filament\Resources\GuestTypeResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\GuestResource;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -13,13 +21,13 @@ class GuestsRelationManager extends RelationManager
 {
     protected static string $relationship = 'guests';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('first_name')->required()->maxLength(255),
-            Forms\Components\TextInput::make('last_name')->maxLength(255),
-            Forms\Components\TextInput::make('email')->email()->required()->maxLength(255),
-            Forms\Components\TextInput::make('phone_number')->tel()->maxLength(255),
+        return $schema->components([
+            TextInput::make('first_name')->required()->maxLength(255),
+            TextInput::make('last_name')->maxLength(255),
+            TextInput::make('email')->email()->required()->maxLength(255),
+            TextInput::make('phone_number')->tel()->maxLength(255),
         ]);
     }
 
@@ -28,32 +36,32 @@ class GuestsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('first_name')
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')->searchable(),
-                Tables\Columns\TextColumn::make('last_name')->searchable(),
-                Tables\Columns\TextColumn::make('email')->searchable(),
-                Tables\Columns\TextColumn::make('phone_number')->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('first_name')->searchable(),
+                TextColumn::make('last_name')->searchable(),
+                TextColumn::make('email')->searchable(),
+                TextColumn::make('phone_number')->searchable(),
+                TextColumn::make('created_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters(GuestResource::tableFilters('relation'))
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->headerActions([CreateAction::make()])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()]),
+            ->toolbarActions([
+                BulkActionGroup::make([DeleteBulkAction::make()]),
             ]);
     }
 

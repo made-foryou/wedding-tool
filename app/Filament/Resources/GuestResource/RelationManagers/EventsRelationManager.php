@@ -2,8 +2,16 @@
 
 namespace App\Filament\Resources\GuestResource\RelationManagers;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\CreateAction;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -12,10 +20,10 @@ class EventsRelationManager extends RelationManager
 {
     protected static string $relationship = 'events';
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('name'),
+        return $schema->components([
+            TextInput::make('name'),
         ]);
     }
 
@@ -24,31 +32,31 @@ class EventsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('location')->searchable(),
-                Tables\Columns\TextColumn::make('date')->date(),
-                Tables\Columns\TextColumn::make('start'),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('location')->searchable(),
+                TextColumn::make('date')->date(),
+                TextColumn::make('start'),
+                TextColumn::make('created_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
+                TextColumn::make('deleted_at')
                     ->since()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([Tables\Actions\CreateAction::make()])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+            ->headerActions([CreateAction::make()])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()]),
+            ->toolbarActions([
+                BulkActionGroup::make([DeleteBulkAction::make()]),
             ]);
     }
 
