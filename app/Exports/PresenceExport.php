@@ -20,11 +20,9 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
 
     public function collection(): Collection
     {
-        $guests = Guest::all();
-
-        $guests->load(['guestType', 'events', 'questions']);
-
-        return $guests;
+        return Guest::query()
+            ->with(['guestType', 'events', 'questions'])
+            ->get();
     }
 
     public function map($row): array
@@ -51,7 +49,7 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
                 continue;
             }
 
-            if ($row->events->has($event->id)) {
+            if ($row->events->contains('id', '=', $event->id)) {
                 $values[] = 'Ja';
             } else {
                 $values[] = 'Nee';
@@ -59,13 +57,17 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
         }
 
         foreach ($questions as $question) {
-            if ($question->guest_type_id !== $row->guest_type_id) {
+            if ($question->guest_type_id !== null && $question->guest_type_id !== $row->guest_type_id) {
                 $values[] = 'n.v.t.';
 
                 continue;
             }
 
-            $values[] = $row->questions->find($question->id)?->answer ?? '-';
+            $answer = $row->questions->filter(
+                fn (Question $item): bool => $item->id === $question->id
+            )->first();
+
+            $values[] = $answer?->pivot->answer ?? '-';
         }
 
         return $values;
