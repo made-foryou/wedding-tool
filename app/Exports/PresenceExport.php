@@ -20,11 +20,9 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
 
     public function collection(): Collection
     {
-        $guests = Guest::all();
-
-        $guests->load(['guestType', 'events', 'questions']);
-
-        return $guests;
+        return Guest::query()
+            ->with(['guestType', 'events', 'questions'])
+            ->get();
     }
 
     public function map($row): array
@@ -51,7 +49,7 @@ readonly class PresenceExport implements FromCollection, ShouldAutoSize, WithHea
                 continue;
             }
 
-            if ($row->events->has($event->id)) {
+            if ($row->events->contains('id', '=', $event->id)) {
                 $values[] = 'Ja';
             } else {
                 $values[] = 'Nee';
