@@ -51,16 +51,14 @@ class EventsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([CreateAction::make(), AttachAction::make()
-                ->preloadRecordSelect()])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DetachAction::make(),
-                DeleteAction::make(),
+            ->headerActions([
+                AttachAction::make()
+                    ->label('Koppelen')
+                    ->preloadRecordSelect(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()]),
+            ->recordActions([
+                DetachAction::make()
+                    ->label('Ontkoppelen'),
             ]);
     }
 
