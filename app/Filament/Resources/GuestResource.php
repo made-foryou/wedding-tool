@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Domains\Guests\Enums\PresenceExportType;
 use App\Domains\Guests\Models\Guest;
 use App\Domains\Guests\Models\GuestType;
+use App\Domains\Presence\Models\Event;
+use App\Domains\Question\Models\Question;
 use App\Exports\PresenceExport;
 use App\Filament\Resources\GuestResource\Pages\CreateGuest;
 use App\Filament\Resources\GuestResource\Pages\EditGuest;
@@ -23,15 +25,19 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Maatwebsite\Excel\Facades\Excel;
+use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
+use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class GuestResource extends Resource
 {
@@ -81,12 +87,22 @@ class GuestResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters(self::tableFilters())
-            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
+
+                    ExportBulkAction::make()
+                        ->exports([
+                            ExcelExport::make()
+                                ->askForFilename()
+                                ->withColumns(self::getExportColumns()),
+                        ]),
                 ]),
             ])
             ->headerActions([
@@ -106,6 +122,44 @@ class GuestResource extends Resource
                         return false;
                     }),
             ]);
+    }
+
+    public static function getExportColumns(): array
+    {
+        $columns = [
+            Column::make('id')->heading('Nummering'),
+            Column::make('name')->heading('Naam'),
+            Column::make('email')->heading('E-mailadres'),
+            Column::make('phone_number')->heading('Telefoonnummer'),
+            Column::make('guestType.name')->heading('Gast type'),
+        ];
+
+        $events = Event::all();
+
+        foreach ($events as $event) {
+            $columns[] = Column::make('event-'.$event->id)
+                ->heading('Aanwezig '.$event->name)
+                ->getStateUsing(
+                    function (Guest $record) use ($event): string {
+                        return $record->load('events')
+                            ->events
+                            ->contains('id', '=', $event->id) ? 'Ja' : 'Nee';
+                    }
+                );
+        }
+
+        $questions = Question::all();
+
+        foreach ($questions as $question) {
+            $columns[] = Column::make('question-'.$question->id)
+                ->heading('Antwoord '.$question->label)
+                ->getStateUsing(fn (Guest $record): string => $record->load('questions')->questions
+                    ->filter(fn (Question $item): bool => $item->id === $question->id)
+                    ->first()?->pivot->answer ?? '-'
+                );
+        }
+
+        return $columns;
     }
 
     public static function getRelations(): array
@@ -130,6 +184,11 @@ class GuestResource extends Resource
                 ->options([
                     GuestType::all()->mapWithKeys(fn (GuestType $type): array => [$type->id => $type->name])->all(),
                 ]);
+
+            $filters[] = TernaryFilter::make('has_registered')
+                ->label('Heeft zijn aanwezigheid zelf aangemeld?')
+                ->trueLabel('Ja')
+                ->falseLabel('Nee');
         }
 
         return $filters;
