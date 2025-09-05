@@ -2,10 +2,10 @@
 
 namespace App\Domains\Presence\Actions;
 
-use Illuminate\Support\Facades\DB;
 use App\Domains\Guests\Models\Guest;
 use App\Domains\Presence\Data\EventGuestPresenceData;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 final readonly class SaveEventGuestPresenceAction
 {
@@ -23,7 +23,7 @@ final readonly class SaveEventGuestPresenceAction
     public function run(Collection $combinations, \Illuminate\Database\Eloquent\Collection $guests): void
     {
         $guests->each(function (Guest $guest) {
-            DB::table('guest_event')->where('guest_id', $guest->id)->delete();
+            DB::table('event_guest')->where('guest_id', $guest->id)->delete();
         });
 
         $combinations->each(function (EventGuestPresenceData $combination): void {
