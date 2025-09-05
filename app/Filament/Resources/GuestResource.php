@@ -61,7 +61,7 @@ class GuestResource extends Resource
             TextInput::make('first_name')->required()->maxLength(255),
             TextInput::make('last_name')->maxLength(255),
             TextInput::make('email')->email()->maxLength(255),
-            TextInput::make('phone_number')->tel()->maxLength(255),
+            TextInput::make('phone_number')->maxLength(255),
         ]);
     }
 
