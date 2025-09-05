@@ -14,6 +14,8 @@ use App\Filament\Resources\GuestResource\Pages\ListGuests;
 use App\Filament\Resources\GuestResource\Pages\ViewGuest;
 use App\Filament\Resources\GuestResource\RelationManagers\AnswersRelationManager;
 use App\Filament\Resources\GuestResource\RelationManagers\EventsRelationManager;
+use App\Mail\AbsentConfirmationMail;
+use App\Mail\PresentConfirmationMail;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -21,8 +23,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -34,6 +38,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
@@ -90,6 +95,52 @@ class GuestResource extends Resource
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('mail')
+                    ->label('Verstuur e-mail')
+                    ->schema([
+                        Checkbox::make('force')
+                            ->label('Geforceerd de e-mail versturen?')
+                            ->helperText('Wanneer de e-mail al is verstuurd naar deze gast dan wordt de e-mail niet verstuurd. Tenzij je dit vinkje aanvinkt. Dan wordt de e-mail altijd verstuurd.'),
+                    ])
+                    ->action(function (array $data, Guest $record): void {
+
+                        if ($record->email === null) {
+                            Notification::make()
+                                ->title('Geen e-mailadres')
+                                ->body('Er is nog geen e-mailadres bekend van deze persoon waardoor we de e-mail niet kunnen versturen.')
+                                ->danger()
+                                ->send();
+
+                            return;
+                        }
+
+                        if ($record->email_sent && $data['force'] === false) {
+                            Notification::make()
+                                ->title('Al verstuurd')
+                                ->body('Deze persoon heeft de e-mail al ontvangen en je hebt hem niet geforceerd verstuurd. Hierdoor wordt de e-mail niet verstuurd.')
+                                ->info()
+                                ->send();
+
+                            return;
+                        }
+
+                        if ($record->events->isNotEmpty()) {
+                            Mail::to($record->email)
+                                ->send(new PresentConfirmationMail($record));
+                        } else {
+                            Mail::to($record->email)
+                                ->send(new AbsentConfirmationMail($record));
+                        }
+
+                        $record->email_sent = true;
+                        $record->save();
+
+                        Notification::make()
+                            ->title('E-mail verstuurd')
+                            ->body('De e-mail is met success verstuurd aan de persoon.')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
