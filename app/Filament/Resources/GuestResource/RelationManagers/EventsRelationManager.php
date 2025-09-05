@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\GuestResource\RelationManagers;
 
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
@@ -49,10 +51,12 @@ class EventsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([CreateAction::make()])
+            ->headerActions([CreateAction::make(), AttachAction::make()
+                ->preloadRecordSelect()])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                DetachAction::make(),
                 DeleteAction::make(),
             ])
             ->toolbarActions([
@@ -62,6 +66,6 @@ class EventsRelationManager extends RelationManager
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
 }
