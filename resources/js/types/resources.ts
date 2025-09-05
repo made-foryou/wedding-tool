@@ -57,6 +57,6 @@ export interface Question {
     type: QuestionType;
     label: string;
     description: string;
-    data: any;
+    data: never;
     show_for_absent: boolean;
 }

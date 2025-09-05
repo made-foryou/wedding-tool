@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Domains\Guests\Enums\PresenceExportType;
 use App\Domains\Guests\Models\Guest;
+use App\Domains\Guests\Models\GuestType;
 use App\Exports\PresenceExport;
 use App\Filament\Resources\GuestResource\Pages\CreateGuest;
 use App\Filament\Resources\GuestResource\Pages\EditGuest;
@@ -22,8 +23,10 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -61,6 +64,8 @@ class GuestResource extends Resource
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('phone_number')->searchable(),
                 IconColumn::make('has_registered')->boolean(),
+                IconColumn::make('Aanwezig')->boolean()
+                    ->getStateUsing(fn ($record) => $record->events->isNotEmpty()),
                 IconColumn::make('email_sent')->boolean(),
                 TextColumn::make('created_at')
                     ->since()
@@ -120,6 +125,11 @@ class GuestResource extends Resource
 
         if ($context === 'resource') {
             $filters[] = TrashedFilter::make();
+
+            $filters[] = SelectFilter::make('guest_type_id')
+                ->options([
+                    GuestType::all()->mapWithKeys(fn (GuestType $type): array => [$type->id => $type->name])->all(),
+                ]);
         }
 
         return $filters;

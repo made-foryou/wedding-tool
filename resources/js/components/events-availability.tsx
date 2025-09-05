@@ -3,8 +3,17 @@ import { Guest } from '@/types/resources';
 import { Card, CardBody, CardHeader } from '@heroui/react';
 import React from 'react';
 
+interface Event {
+    id: string;
+    name: string;
+    date: string;
+    location: string;
+    start: string;
+}
+
+
 interface EventsAvailabilityProps {
-    events: Array<any>;
+    events: Array<Event>;
     guests: Array<Guest>;
     selected: boolean;
 }

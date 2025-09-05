@@ -45,15 +45,13 @@ class GuestModelTest extends TestCase
     }
 
     #[Test]
-    public function it_requires_an_email(): void
+    public function it_does_not_require_an_email(): void
     {
         $type = GuestType::factory()->create();
 
         $guest = Guest::factory()->for($type)->create();
 
         $this->assertNotNull($guest->email);
-
-        $this->expectException(QueryException::class);
 
         $type->guests()->create([
             'first_name' => $this->faker->firstName,

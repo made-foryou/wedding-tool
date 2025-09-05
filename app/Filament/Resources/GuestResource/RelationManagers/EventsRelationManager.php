@@ -2,18 +2,12 @@
 
 namespace App\Filament\Resources\GuestResource\RelationManagers;
 
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\CreateAction;
-use Filament\Actions\ViewAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class EventsRelationManager extends RelationManager
@@ -49,19 +43,19 @@ class EventsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([CreateAction::make()])
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+            ->headerActions([
+                AttachAction::make()
+                    ->label('Koppelen')
+                    ->preloadRecordSelect(),
             ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()]),
+            ->recordActions([
+                DetachAction::make()
+                    ->label('Ontkoppelen'),
             ]);
     }
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
 }
