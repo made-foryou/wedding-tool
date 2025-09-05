@@ -23,7 +23,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $name
  * @property string $first_name
  * @property string|null $last_name
- * @property string $email (Unique)
+ * @property string|null $email (Unique)
  * @property string|null $phone_number
  * @property bool $has_registered
  * @property bool $email_sent

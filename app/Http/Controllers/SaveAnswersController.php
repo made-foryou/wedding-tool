@@ -52,10 +52,9 @@ class SaveAnswersController extends Controller
                 );
             }
 
-            if (true === $guest->email_sent) {
+            if ($guest->email_sent === true) {
                 return;
             }
-
 
             if ($guest->events->isNotEmpty()) {
                 Mail::to($guest->email)
