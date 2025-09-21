@@ -85,8 +85,9 @@ class Guest extends Model
      */
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'guest_question_answers')
-            ->withPivot('answer');
+        return $this->belongsToMany(Question::class, 'guest_question_answers', 'guest_id', 'question_id')
+            ->withPivot('answer')
+            ->withTimestamps();
     }
 
     /**

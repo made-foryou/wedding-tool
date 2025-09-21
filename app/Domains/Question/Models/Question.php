@@ -2,6 +2,7 @@
 
 namespace App\Domains\Question\Models;
 
+use App\Domains\Guests\Models\Guest;
 use App\Domains\Guests\Models\GuestType;
 use App\Domains\Presence\Models\Event;
 use Database\Factories\QuestionFactory;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -67,6 +69,13 @@ class Question extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function guests(): BelongsToMany
+    {
+        return $this->belongsToMany(Guest::class, 'guest_question_answers', 'question_id', 'guest_id')
+            ->withPivot('answer')
+            ->withTimestamps();
     }
 
     /**

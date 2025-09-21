@@ -243,6 +243,11 @@ class GuestResource extends Resource
                 ->label('Heeft zijn aanwezigheid zelf aangemeld?')
                 ->trueLabel('Ja')
                 ->falseLabel('Nee');
+
+            $filters[] = TernaryFilter::make('present')
+                ->label('Is hij/zij aanwezig?')
+                ->trueLabel('Ja')
+                ->falseLabel('Nee');
         }
 
         return $filters;
