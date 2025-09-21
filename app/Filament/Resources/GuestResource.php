@@ -26,6 +26,7 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -62,6 +63,9 @@ class GuestResource extends Resource
             TextInput::make('last_name')->maxLength(255),
             TextInput::make('email')->email()->maxLength(255),
             TextInput::make('phone_number')->maxLength(255),
+            Toggle::make('has_registered')->default(false),
+            Toggle::make('present')->default(false),
+            Toggle::make('email_sent')->default(false),
         ]);
     }
 
@@ -75,8 +79,7 @@ class GuestResource extends Resource
                 TextColumn::make('email')->searchable(),
                 TextColumn::make('phone_number')->searchable(),
                 IconColumn::make('has_registered')->boolean(),
-                IconColumn::make('Aanwezig')->boolean()
-                    ->getStateUsing(fn ($record) => $record->events->isNotEmpty()),
+                IconColumn::make('present')->boolean(),
                 IconColumn::make('email_sent')->boolean(),
                 TextColumn::make('created_at')
                     ->since()
