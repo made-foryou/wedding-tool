@@ -2,18 +2,15 @@
 
 namespace App\Filament\Resources\GuestResource\RelationManagers;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\CreateAction;
-use Filament\Actions\ViewAction;
+use Filament\Actions\AttachAction;
+use Filament\Actions\DetachAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Forms;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AnswersRelationManager extends RelationManager
@@ -23,14 +20,21 @@ class AnswersRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('answer'),
-        ]);
+            TextInput::make('label')
+                ->label('Vraag')
+                ->disabled(),
+
+            Textarea::make('answer')
+                ->label('Antwoord')
+                ->required(),
+        ])
+            ->columns(1);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('question.name')
+            ->recordTitleAttribute('label')
             ->columns([
                 TextColumn::make('label')->searchable(),
                 TextColumn::make('description')->searchable(),
@@ -48,19 +52,21 @@ class AnswersRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->headerActions([CreateAction::make()])
+            ->headerActions([
+                AttachAction::make()
+                    ->label('Koppelen')
+                    ->preloadRecordSelect(),
+            ])
             ->recordActions([
+                DetachAction::make()
+                    ->label('Ontkoppelen'),
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([DeleteBulkAction::make()]),
             ]);
     }
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
 }

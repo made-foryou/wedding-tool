@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $email (Unique)
  * @property string|null $phone_number
  * @property bool $has_registered
+ * @property bool $present
  * @property bool $email_sent
  * @property-read Carbon $created_at
  * @property-read Carbon $updated_at
@@ -52,15 +53,14 @@ class Guest extends Model
         'email',
         'phone_number',
         'has_registered',
+        'present',
         'email_sent',
     ];
 
     public function name(): Attribute
     {
         return Attribute::make(
-            get: function ($value, array $attributes): string {
-                return "{$attributes['first_name']} {$attributes['last_name']}";
-            },
+            get: fn ($value, array $attributes): string => "{$attributes['first_name']} {$attributes['last_name']}",
         );
     }
 
@@ -72,15 +72,22 @@ class Guest extends Model
         return $this->belongsTo(GuestType::class);
     }
 
+    /**
+     * @return BelongsToMany<Event>
+     */
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class, 'event_guest', 'guest_id', 'event_id');
     }
 
+    /**
+     * @return BelongsToMany<Question>
+     */
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'guest_question_answers')
-            ->withPivot('answer');
+        return $this->belongsToMany(Question::class, 'guest_question_answers', 'guest_id', 'question_id')
+            ->withPivot('answer')
+            ->withTimestamps();
     }
 
     /**
