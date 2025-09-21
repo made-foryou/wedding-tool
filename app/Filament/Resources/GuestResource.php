@@ -14,6 +14,7 @@ use App\Filament\Resources\GuestResource\Pages\ListGuests;
 use App\Filament\Resources\GuestResource\Pages\ViewGuest;
 use App\Filament\Resources\GuestResource\RelationManagers\AnswersRelationManager;
 use App\Filament\Resources\GuestResource\RelationManagers\EventsRelationManager;
+use App\Livewire\PresenceOverview;
 use App\Mail\AbsentConfirmationMail;
 use App\Mail\PresentConfirmationMail;
 use Filament\Actions\Action;
@@ -251,6 +252,13 @@ class GuestResource extends Resource
         }
 
         return $filters;
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            PresenceOverview::class,
+        ];
     }
 
     public static function getPages(): array
