@@ -4,8 +4,9 @@ namespace App\Filament\Resources\GuestResource\Pages;
 
 use App\Domains\Guests\Models\Guest;
 use App\Domains\Presence\Models\Event;
-use Filament\Actions\CreateAction;
 use App\Filament\Resources\GuestResource;
+use App\Livewire\PresenceOverview;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Schemas\Components\Tabs\Tab;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,6 +42,13 @@ class ListGuests extends ListRecords
     {
         return [
             CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            PresenceOverview::class,
         ];
     }
 }
