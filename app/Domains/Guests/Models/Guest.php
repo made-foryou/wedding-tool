@@ -5,6 +5,7 @@ namespace App\Domains\Guests\Models;
 use App\Domains\Guests\QueryBuilder\GuestQueryBuilder;
 use App\Domains\Presence\Models\Event;
 use App\Domains\Question\Models\Question;
+use App\Models\Recipient;
 use Database\Factories\GuestFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -34,6 +36,7 @@ use Illuminate\Support\Carbon;
  * @property-read GuestType $guestType
  * @property-read Collection<Event> $events
  * @property-read Collection<Question> $questions
+ * @property-read Collection<Recipient> $recipients
  *
  * @method static GuestFactory factory($count = null, $state = [])
  * @method static GuestQueryBuilder query()
@@ -78,6 +81,11 @@ class Guest extends Model
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class, 'event_guest', 'guest_id', 'event_id');
+    }
+
+    public function recipients(): HasMany
+    {
+        return $this->hasMany(Recipient::class);
     }
 
     /**
