@@ -8,6 +8,7 @@ use App\Domains\Guests\Models\GuestType;
 use App\Domains\Presence\Models\Event;
 use App\Domains\Question\Models\Question;
 use App\Exports\PresenceExport;
+use App\Filament\Actions\SendEmailBulkAction;
 use App\Filament\Resources\GuestResource\Pages\CreateGuest;
 use App\Filament\Resources\GuestResource\Pages\EditGuest;
 use App\Filament\Resources\GuestResource\Pages\ListGuests;
@@ -151,6 +152,8 @@ class GuestResource extends Resource
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),
                     RestoreBulkAction::make(),
+
+                    SendEmailBulkAction::make(),
 
                     ExportBulkAction::make()
                         ->exports([
